@@ -1,0 +1,9 @@
+configuration {
+        modi:            "combi, window, ssh";
+        display-drun:    "Apps";
+        display-run:     "Run";
+        display-window:  "Running Apps";
+        bw:              0;
+	auto-select:     false;
+        theme:           "ndarkin";
+}

@@ -1,0 +1,165 @@
+* {
+    background-color: #0F1212;
+    text-color: #D3D7CF;
+
+    selected-background: #E3E3E3;
+    active-background: #E3E3E3;
+    urgent-background: #E3E3E3;
+    window-background: @background-color;
+
+    selected-normal-foreground: @window-background;
+    normal-foreground: @text-color;
+    selected-normal-background: @active-background;
+    normal-background: @background-color;
+
+    selected-urgent-foreground: @background-color;
+    urgent-foreground: @text-color;
+    selected-urgent-background: @urgent-background;
+    urgent-background: @background-color;
+
+    selected-active-foreground: @window-background;
+    selected-active-background: @window-background;
+    active-foreground: @window-background;
+    active-background: @selected-background;
+
+    separator-style: "none";
+    margin: 0;
+
+    /*
+    border-color: @background-color;
+    text-color: #D3D7CF;
+    spacing: 0;
+    width: 600px;
+    */
+    font: "SF Pro Text Medium 12";
+}
+
+window {
+    width: 700px;
+    background-color: @background-color;
+    children: [mainbox];
+}
+
+mainbox {
+    border: 0;
+    orientation: vertical;
+    children: [entry, message, listview, mode-switcher];
+}
+
+entry {
+    expand: false;
+    text-color: @normal-foreground;
+    padding: 10px 0 10px 10px;
+    border: 0 0 1px;
+    border-color: grey;
+    margin: 30px 30px 0 30px;
+}
+/*
+inputbar {
+    border: 0 0 1px 0;
+    children: [prompt, entry];
+}
+
+
+prompt {
+    padding: 16px;
+    border: 0 1px 0 0;
+}
+*/
+
+sidebar {
+    expand: false;
+}
+
+textbox {
+    /*
+    background-color: #2e343f;
+    border: 0 0 1px 0;
+    border-color: #282C33;
+    padding: 8px 16px;
+    */
+    horizontal-align: 0;
+    background-color: silver;
+    padding: 10px 20px 10px 20px;
+    text-color: #fff;
+}
+/*
+entry {
+    padding: 16px;
+    border: 0 0 1px;
+    border-color: grey;
+}
+*/
+listview {
+    border: 0;
+    padding: 20 30 70 30;
+    /*
+    dynamic: true;
+    cycle: false;
+    margin: 0 0 -1px 0;
+    scrollbar: true;
+    scrollbar-width: 3px;*/
+}
+
+mode-switcher {
+    margin: 10px 30px 30px 30px;
+}
+
+button {
+    padding: 8px;
+}
+
+button selected {
+    background-color: @selected-normal-background;
+    text-color: @selected-normal-foreground;
+}
+/*
+element {
+    border: 0 0 1px 0;
+    padding: 16px;
+}
+
+element selected {
+    background-color: @text-color;
+    text-color: @background-color;
+}
+*/
+
+#element {
+    border: 0;
+    padding: 10px 20px 10px 20px;
+}
+
+element normal normal {
+    background-color: @normal-background;
+    text-color: @normal-foreground;
+}
+
+#element.normal.urgent {
+    background-color: @urgent-background;
+    text-color: @urgent-foreground;
+}
+
+#element.normal.active {
+    background-color: @active-background;
+    text-color: @active-foreground;
+}
+
+#element.selected.normal {
+    background-color: @selected-normal-background;
+    text-color: @selected-normal-foreground;
+}
+
+#element.selected.urgent {
+    background-color: @selected-urgent-background;
+    text-color: @selected-urgent-foreground;
+}
+
+#element.selected.active {
+    background-color: @selected-active-background;
+    text-color: @selected-active-foreground;
+}
+
+scrollbar {
+    background-color: #4C566A;
+}
