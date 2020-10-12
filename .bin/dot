@@ -1,0 +1,93 @@
+#!/usr/bin/bash
+set -euo pipefail
+IFS=$' \n\t'
+
+source "${DOTFILES_PATH}/.scripts/core/colors.sh"
+
+##? A hub for an all-purpose set of scripts
+##?
+##? Usage:
+##?     dot
+##?     dot <context>
+##?     dot <context> <command> [<args>...]
+
+header() { echo -e "\n\033[1m$@\033[0m"; }
+#info() { echo -e "" }
+
+doc::help() {
+    header "A hub for an all-purpose set of scripts"
+    #echo -e "\n"
+    echo -e "\nUsage: $(tput bold)dot <context> <command> [<args>...]$(tput sgr0)"
+    echo -e "\nOptions:"
+    echo -e "   $(tput bold)dot -h$(tput sgr0) | $(tput bold)dot --help$(tput sgr0) | Show this help message"
+    echo -e "   $(tput bold)dot -v$(tput sgr0) | $(tput bold)dot --version$(tput sgr0) | Show the current version of this CLI"
+    echo -e "   $(tput bold)dot -c$(tput sgr0) | $(tput bold)dot --contexts$(tput sgr0) | Show available contexts"
+    echo -e "   $(tput bold)dot <context>$(tput sgr0) | Show available commands from a context"
+    echo -e "   $(tput bold)dot <context> <command> -h$(tput sgr0) | Help for a command\n"
+    echo -e "Check for updates: $(tput bold)dot self update$(tput sgr0)\n"
+
+    #echo -e "   ${CYAN}dot"
+    #echo -e "   dot${NC} <context>"
+    #echo -e "   ${CYAN}dot${NC} <context> <command> [<args>...]"
+}
+
+list_command_paths() {
+    find "$DOTFILES_PATH/.scripts" -maxdepth 2 -perm 111 -type f |
+        grep -v core |
+        sort
+}
+
+_alias() {
+    local -r arg="$1"
+    case "$arg" in
+        net) echo network ;;
+        wp) echo wallpaper ;;
+        *) echo "$arg" ;;
+    esac
+}
+
+list_contexts() {
+    echo -e "\nAvailable contexts:"
+    tput bold
+    find "${DOTFILES_PATH}/.scripts/" -maxdepth 2 -executable -type f |
+        grep -v core | awk -F"/" '{print \t$(NF-1)}' | sort
+    tput sgr0
+    echo ""
+}
+
+if [[ $# -eq 0 ]]; then
+    #echo -e "\nShowing available contexts...\n"
+    #list_command_paths
+    doc::help && exit
+    #find "${DOTFILES_PATH}/.scripts/" -maxdepth 2 -executable -type f | 
+    #    sort | awk -F"/" '{print $(NF-1) " " $NF}' 
+
+elif [[ $# -eq 1 ]]; then
+    source "${DOTFILES_PATH}/.scripts/core/main.sh"
+    #context_query=$1
+    context_query="$(_alias $1)"
+
+    case $context_query in
+        #-h|--help) echo "Help." && exit ;;
+        -h|--help) doc::help "$@" && exit ;;
+        -c|--contexts) list_contexts "$@" && exit ;;
+        -v|--version) echo "Currently using version 0.1.5 of the dot command.\n" && exit ;;
+        # -v|--version) _version && exit ;;
+    esac
+
+    #doc::help "$@" && exit
+    echo -e "\nAvailable commands for the $(tput bold)$context_query$(tput sgr0) context:"
+    tput bold
+    find "${DOTFILES_PATH}/.scripts/${context_query}/" -maxdepth 2 -executable -type f | awk -F"/" '{printf("%-20s%-20\n", $NF)}' | sort
+    tput sgr0
+    echo ""
+
+else
+    ctx="$(_alias $1)"
+    cmd="$2"
+
+    shift 2
+    "${DOTFILES_PATH}/.scripts/${ctx}/${cmd}" "$@"
+fi
+
+#echo -e "\n\033[1mHello $1 \033[0m\n"
