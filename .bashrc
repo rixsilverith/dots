@@ -8,11 +8,12 @@
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 
-export DOTFILES_PATH=$HOME
+export DOTFILES_HOME=$HOME/.dotfiles
 
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/.bin
+export PATH=$PATH:$DOTFILES_HOME/bin
 
 # Enable aliases to be sudo'ed
 alias sudo='sudo '

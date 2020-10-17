@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+#?? Check for updates
+##?
+##? Usage: dot self update
+
+source "${DOTFILES_HOME}/scripts/core/log.sh"
+
+check_for_updates() {
+    echo "Bonjour"
+}
+
+echo -e "$(log::color green)$(log::color reset) Checking for updates..."
+is_update_available=$(check_for_updates)
+
+if [[ $is_update_available == '1' ]]; then
+    echo -e "A new version of the dotfiles is available! Wanna clone it? [Y/n]"
+
+else
+    echo -e "Your dotfiles are up to date. Awesome!"

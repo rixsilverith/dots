@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+set -euo pipefail
+IFS=$' \n\t'
+##? 0.1.0
+
+source "${DOTFILES_HOME}/scripts/core/main.sh"
+source "${DOTFILES_HOME}/scripts/core/log.sh"
+source "${DOTFILES_HOME}/scripts/core/help.sh"
+source "${DOTFILES_HOME}/scripts/core/contexts.sh"
+
+if [[ $# -eq 0 ]]; then
+    doc::help && exit
+
+elif [[ $# -eq 1 ]]; then
+    context_query="$(_alias $1)"
+
+    case $context_query in
+        -h|--help) doc::help "$@" && exit ;;
+        -c|--contexts) list_contexts "$@" && exit ;;
+        -v|--version) _version && exit ;;
+    esac
+
+    list_ctx_commands $context_query
+
+else
+    ctx="$(_alias $1)"
+    cmd="$2"
+    shift 2
+    "${DOTFILES_HOME}/scripts/${ctx}/${cmd}" "$@"
+fi
