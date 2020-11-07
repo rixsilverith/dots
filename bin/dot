@@ -1,30 +1,72 @@
 #!/usr/bin/bash
 set -euo pipefail
 IFS=$' \n\t'
-##? 0.1.0
 
 source "${DOTFILES_HOME}/scripts/core/main.sh"
 source "${DOTFILES_HOME}/scripts/core/log.sh"
 source "${DOTFILES_HOME}/scripts/core/help.sh"
-source "${DOTFILES_HOME}/scripts/core/contexts.sh"
+source "${DOTFILES_HOME}/scripts/core/args.sh"
 
-if [[ $# -eq 0 ]]; then
-    doc::help && exit
+_alias() {
+    local -r command=$1
+    case $command in
+        net) echo network ;;
+        sys) echo system ;;
+        *)   echo $command ;;
+    esac
+}
 
-elif [[ $# -eq 1 ]]; then
-    context_query="$(_alias $1)"
+doc::cmd_help() {
+    local -r file="$1"
+    grep "^##?" "$file" | cut -c 5-
+}
 
-    case $context_query in
+contexts::list_commands() {
+    local -r contexts=($(find "$DOTFILES_HOME/scripts" -mindepth 2 -maxdepth 2 -executable -type f | grep -v core | sort))
+
+    echo
+    for c in "${contexts[@]}"; do
+        cmd_help=$(doc::cmd_help "$c")
+        ctx=$(echo $c | awk -F"/" '{print $(NF-1)}')
+        cmd=$(echo $c | awk -F"/" '{print $NF}')
+        cs=$(echo -e "\t$ctx $(tput bold)$cmd$(tput sgr0)")
+        printf "%-30s %-30s\n" "$cs" "$cmd_help"
+    done
+    echo
+}
+
+contexts::ctx_commands() {
+    local -r ctx="$1"
+    local -r commands=($(find "$DOTFILES_HOME/scripts/$ctx" -maxdepth 1 -mindepth 1 -executable -type f | sort))
+
+    echo
+    for c in "${commands[@]}"; do
+        cmd_help=$(doc::cmd_help "$c")
+        cmd=$(echo $c | awk -F"/" '{ print $NF }')
+        cs=$(echo -e "\t$(tput bold)$cmd$(tput sgr0)")
+        printf "%-25s %-30s\n" "$cs" "$cmd_help"
+    done
+    echo
+}
+
+if args::has_no_args "$@"; then
+    contexts::list_commands
+
+elif args::total_is 1 "$@"; then
+    context="$1"
+
+    case $context in
         -h|--help) doc::help "$@" && exit ;;
-        -c|--contexts) list_contexts "$@" && exit ;;
+        -c|--contexts) contexts::list_commands "$@" && exit ;;
         -v|--version) _version && exit ;;
     esac
 
-    list_ctx_commands $context_query
+    contexts::ctx_commands $context
 
 else
-    ctx="$(_alias $1)"
-    cmd="$2"
+    context="$1"
+    command="$2"
     shift 2
-    "${DOTFILES_HOME}/scripts/${ctx}/${cmd}" "$@"
+
+    "${DOTFILES_HOME}/scripts/${context}/${command}" "$@"
 fi

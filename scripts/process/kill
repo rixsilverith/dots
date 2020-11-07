@@ -1,0 +1,17 @@
+!/usr/bin/bash
+set -euo pipefail
+
+##? Kills a process given its name
+
+source "${DOTFILES_HOME}/scripts/core/log.sh"
+
+ps aux |
+    grep $1 |
+    grep -v grep |
+    grep -v kill |
+    awk '{print $2}' |
+    xargs kill -9
+
+echo
+log::success "Done!"
+echo

@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+##? Status of the current wireless connection

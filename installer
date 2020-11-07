@@ -1,0 +1,88 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+_w() {
+    local -r text="${1:-}"
+    echo -e "$text"
+}
+
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+purple=$(tput setaf 5)
+bold=$(tput bold)
+reset=$(tput sgr0)
+
+_info()    { _w " ${bold}${green}>${reset} $1"; }
+_success() { _w " ${green}✔ $1${reset}"; }
+_warning() { _w " ${yellow}${bold}!${reset}${yellow} $1${reset}"; }
+_error()   { _w " ${red}✖ $1${reset}"; }
+_quest()   { read -rp "${bold}$1${reset} " "$2"; }
+
+current_timestamp() { date +%s;  }
+
+create_dotfiles_dir() {
+    if [ -d "$1" ]; then
+        local -r backup_path="$1.$(current_timestamp).back"
+        
+        _error "The path already exists"
+        _info "Creating a backup in '$backup_path'"
+
+        mv "$1" "$backup_path"
+
+    else
+        _info "Nice! Dotfiles will be located in $(tput bold)$DOTFILES_HOME$(tput sgr0)"
+    fi
+
+    mkdir -p "$1"
+}
+
+command_exists() { type "$1" >/dev/null 2>&1;  }
+
+_w
+_w "$(tput bold)Welcome to the rixsilverith/dotfiles installer!$(tput sgr0)"
+_w
+_quest "Where do you want your dotfiles to be located? (default ~/.dotfiles)" "DOTFILES_HOME"
+export DOTFILES_HOME="${DOTFILES_HOME:-$HOME/.dotfiles}"
+# create_dotfiles_dir "$DOTFILES_HOME"
+
+if ! command_exists git; then
+    _error "Git is not installed in your system"
+    _info "Trying to install Git..."
+
+    if command_exists apt; then
+        _info "Installing git using apt..."
+        sudo apt -y install git >/dev/null 2>&1
+        _success "Git installed successfully!"
+    elif command_exists pacman; then
+        log::info "Installing git using pacman..."
+        sudo pacman -S git >/dev/null 2>&1
+    elif command_exists dnf; then
+        log::info "Installing git using dnf..."
+        sudo dnf -y install git >/dev/null 2>&1
+    elif command_exists yum; then
+        log::info "Installing git using yum..."
+        yes | sudo yum install git >/dev/null 2>&1
+    else
+        log::error "Could not install git. No package manager found"
+        exit 1
+    fi
+fi
+
+# _a "Initializing your dotfiles git repository"
+# git init >/dev/null
+
+# cd "$DOTFILES_HOME"
+
+_error "Git is not installed in your system"
+_info "Attempting to install Git..."
+_info "Installing Git using pacman..."
+_success "Git installed successfully!"
+
+_warning "This is just a random warning"
+_info "Cloning into $(tput setaf 6)$DOTFILES_HOME$(tput sgr0)"
+#git clone --depth 1 https://github.com/rixsilverith/dotfiles.git "$DOTFILES_HOME" >/dev/null 2>&1
+
+_success "Dotfiles installed successfully!"
+
+#"$DOTFILES_HOME/bin/dot" self install

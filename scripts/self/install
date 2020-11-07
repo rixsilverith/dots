@@ -1,0 +1,22 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+##? Install the dotfiles
+
+source "${DOTFILES_HOME}/scripts/core/log.sh"
+
+_info "Installing Python packages..."
+pip install -r "${DOTFILES_HOME}/lang/python/requirements.txt" || true
+
+_info "Setting ZSH as the default shell..."
+chsh -s "$(command -v zsh)"
+
+_quest "[Git config] What is your email?" git_email
+_quest "[Git config] And your name?" git_name
+
+git config --global user.email "$git_email"
+git config --global user.name "$git_name"
+git config --global --unset user.signingkey
+git config --global --unset commit.gpgsign
+git config --global --unset tag.gpgsign
+git config --global --unset gpg.program

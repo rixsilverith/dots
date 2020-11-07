@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+##? Connect to a wireless network

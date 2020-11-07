@@ -1,21 +1,57 @@
 #!/usr/bin/bash
 set -euo pipefail
 
-#?? Check for updates
-##?
-##? Usage: dot self update
+##? Check for updates and sync the dotfiles
 
 source "${DOTFILES_HOME}/scripts/core/log.sh"
 
-check_for_updates() {
-    echo "Bonjour"
+self_update() {
+    cd "$DOTFILES_HOME" || exit
+
+    git fetch
+    if [[ $(project_status) == "behind" ]]; then
+        _info "There is a newer version of the dotfiles. Pulling..."
+        git pull && exit 0 || _error "Failed to pull from GitHub"
+    fi
 }
 
-echo -e "$(log::color green)$(log::color reset) Checking for updates..."
-is_update_available=$(check_for_updates)
+#apply_symlinks() {
+#
+#}
 
-if [[ $is_update_available == '1' ]]; then
-    echo -e "A new version of the dotfiles is available! Wanna clone it? [Y/n]"
+project_status() {
+    cd "$DOTFILES_HOME" || exit
 
-else
-    echo -e "Your dotfiles are up to date. Awesome!"
+    local -r UPSTREAM="master"
+    local -r LOCAL=$(git rev-parse @)
+    local -r REMOTE=$(git rev-parse "$UPSTREAM")
+    local -r BASE=$(git merge-base @ "$UPSTREAM")
+
+    if [[ "$LOCAL" == "$REMOTE" ]]; then
+        echo "synced"
+    elif [[ "$LOCAL" == "$BASE" ]]; then
+        echo "behind"
+    elif [[ "$REMOTE" == "$BASE" ]]; then
+        echo "ahead"
+    else
+        echo "diverged"
+    fi
+}
+
+self_update() {
+    cd "$DOTFILES_HOME" || exit
+
+    _info "Checking for updates..."
+
+    git fetch
+    if [[ $(project_status) == "behind" ]]; then
+        _info "A new version of the dotfiles is available!"
+        _quest "Do you wanna clone it? [Y/n]"
+
+    fi
+}
+
+_info "Checking for updates..."
+#self_update
+feedback::confirmation "A new version of the dotfiles is available. Wanna clone it?"
+

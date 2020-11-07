@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+##? Unzip a .zip file
