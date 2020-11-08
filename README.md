@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src=".github/desktop.png" width="75%">
+  <img src=".github/desktop.png" width="85%">
 </p>
 
 <p align="center">
@@ -35,7 +35,9 @@ Updating the dotfiles is as simple as running `dot self update` in your terminal
 *Warning*: Note that this process may break your system configuration, and for this reason is strongly recommended to backup your current dotfiles folder before installing the update, by default `$HOME/.dotfiles`.
 
 ## References
-This dotfiles, specially the `dot` command, are pretty much based on [denisidoro's](https://github.com/denisidoro/dotfiles) and [rgomezcasas'](https://github.com/rgomezcasas/dotfiles) awesome dotfiles.
+- The `dot` command, as well as some scripts in these dotfiles, is pretty much based on the [denisidoro](https://github.com/denisidoro/dotfiles) and [rgomezcasas](https://github.com/rgomezcasas/dotfiles) developed for their own dotfiles.
+
+- The custom GTK theme and icons are the work of [Juicyexe](https://github.com/Juicyexe/arch-monochrome).
 
 ## License
 The MIT License. See [License](LICENSE) for more information.
