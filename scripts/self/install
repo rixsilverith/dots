@@ -4,6 +4,11 @@ set -euo pipefail
 ##? Install the dotfiles
 
 source "${DOTFILES_HOME}/scripts/core/log.sh"
+source "${DOTFILES_HOME}/scripts/self/update"
+
+echo
+_info "Symlinking..."
+apply_symlinks
 
 _info "Installing Python packages..."
 pip install -r "${DOTFILES_HOME}/lang/python/requirements.txt" || true
@@ -13,6 +18,7 @@ chsh -s "$(command -v zsh)"
 
 _quest "[Git config] What is your email?" git_email
 _quest "[Git config] And your name?" git_name
+echo
 
 git config --global user.email "$git_email"
 git config --global user.name "$git_name"

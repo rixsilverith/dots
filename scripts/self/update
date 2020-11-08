@@ -5,19 +5,22 @@ set -euo pipefail
 
 source "${DOTFILES_HOME}/scripts/core/log.sh"
 
-self_update() {
-    cd "$DOTFILES_HOME" || exit
+apply_symlinks() {
+    ln -sf "$DOTFILES_HOME/bin" "$HOME"
+    mv "$HOME/bin" "$HOME/.bin"
 
-    git fetch
-    if [[ $(project_status) == "behind" ]]; then
-        _info "There is a newer version of the dotfiles. Pulling..."
-        git pull && exit 0 || _error "Failed to pull from GitHub"
-    fi
+    ln -sf "$DOTFILES_HOME/scripts" "$HOME"
+    mv "$HOME/scripts" "$HOME/.scripts"
+
+    ln -sf "$DOTFILES_HOME/themes" "$HOME"
+    mv "$HOME/themes" "$HOME/.themes"
+
+    ln -sf "$DOTFILES_HOME/icons" "$HOME"
+    mv "$HOME/icons" "$HOME/.icons"
+
+    ln -sf "$DOTFILES_HOME/misc" "$HOME"
+    mv "$HOME/misc" "$HOME/.misc"
 }
-
-#apply_symlinks() {
-#
-#}
 
 project_status() {
     cd "$DOTFILES_HOME" || exit
@@ -45,13 +48,20 @@ self_update() {
 
     git fetch
     if [[ $(project_status) == "behind" ]]; then
-        _info "A new version of the dotfiles is available!"
-        _quest "Do you wanna clone it? [Y/n]"
-
+        i=$(feedback::confirmation "A new version of the dotfiles is available! Wanna clone it?")
+        if [[ $i -eq 0 ]]; then
+            _info "Pulling from GitHub..."
+            git pull >/dev/null 2>&1 && exit 0 || _error "Failed to pull from GitHub"
+        else
+            exit 1
+        fi
+    else
+        _info "Your dotfiles are up to date :)"
+        exit 0
     fi
 }
 
+echo
 _info "Checking for updates..."
-#self_update
-feedback::confirmation "A new version of the dotfiles is available. Wanna clone it?"
-
+self_update
+echo

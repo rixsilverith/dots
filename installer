@@ -44,45 +44,31 @@ _w "$(tput bold)Welcome to the rixsilverith/dotfiles installer!$(tput sgr0)"
 _w
 _quest "Where do you want your dotfiles to be located? (default ~/.dotfiles)" "DOTFILES_HOME"
 export DOTFILES_HOME="${DOTFILES_HOME:-$HOME/.dotfiles}"
-# create_dotfiles_dir "$DOTFILES_HOME"
+create_dotfiles_dir "$DOTFILES_HOME"
 
 if ! command_exists git; then
     _error "Git is not installed in your system"
     _info "Trying to install Git..."
 
     if command_exists apt; then
-        _info "Installing git using apt..."
+        _info "Installing Git using apt..."
         sudo apt -y install git >/dev/null 2>&1
-        _success "Git installed successfully!"
     elif command_exists pacman; then
-        log::info "Installing git using pacman..."
+        _info "Installing Git using pacman..."
         sudo pacman -S git >/dev/null 2>&1
     elif command_exists dnf; then
-        log::info "Installing git using dnf..."
+        _info "Installing Git using dnf..."
         sudo dnf -y install git >/dev/null 2>&1
     elif command_exists yum; then
-        log::info "Installing git using yum..."
+        _info "Installing Git using yum..."
         yes | sudo yum install git >/dev/null 2>&1
     else
-        log::error "Could not install git. No package manager found"
+        _error "Could not install Git. No package manager was found :("
         exit 1
     fi
 fi
 
-# _a "Initializing your dotfiles git repository"
-# git init >/dev/null
-
-# cd "$DOTFILES_HOME"
-
-_error "Git is not installed in your system"
-_info "Attempting to install Git..."
-_info "Installing Git using pacman..."
-_success "Git installed successfully!"
-
-_warning "This is just a random warning"
 _info "Cloning into $(tput setaf 6)$DOTFILES_HOME$(tput sgr0)"
-#git clone --depth 1 https://github.com/rixsilverith/dotfiles.git "$DOTFILES_HOME" >/dev/null 2>&1
+git clone --depth 1 https://github.com/rixsilverith/dotfiles.git "$DOTFILES_HOME" >/dev/null 2>&1
 
-_success "Dotfiles installed successfully!"
-
-#"$DOTFILES_HOME/bin/dot" self install
+"$DOTFILES_HOME/bin/dot" self install
