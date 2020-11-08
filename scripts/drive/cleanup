@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+##? Cleans useless files such as cache, empties trash, etc.
+
+source "${DOTFILES_HOME}/scripts/core/main.sh"
+source "${DOTFILES_HOME}/scripts/core/log.sh"
+
+if ! has gio; then
+    i=$(feedback::confirmation "This script uses the gio command. Wanna install it?")
+    if [[ i -eq 0 ]]; then
+        sudo pacman -S glib2
+    else
+        log::abort "Aborting..."
+    fi
+fi
+
+gio trash --empty
+
