@@ -55,13 +55,15 @@ self_update() {
         else
             exit 1
         fi
+    elif [[ $(project_status) == "ahead" ]]; then
+        _info "Your dotfiles are ahead of the repo. Push changes ;)"
     else
-        _info "Your dotfiles are up to date :)"
+        _info $(project_status)
+        _success "Your dotfiles are up to date :)"
+        echo
         exit 0
     fi
 }
 
 echo
-_info "Checking for updates..."
 self_update
-echo
