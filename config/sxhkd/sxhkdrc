@@ -11,7 +11,7 @@ super + @space
 	dmenu_run
 
 ctrl + @space
-        rofi -show run
+        rofi -show drun -theme /home/rix/.dotfiles/config/rofi/ndarkin2
 
 # make sxhkd reload its configuration files:
 super + Escape
