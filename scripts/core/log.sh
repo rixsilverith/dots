@@ -108,7 +108,7 @@ log::color() {
 
 log::colorfef() {
    case "$@" in
-        *reset*) echo "$(tput sgr0)"; return 0 ;;
+      *reset*) echo "$(tput sgr0)"; return 0 ;;
       *black*) color=30 ;;
       *red*) color=31 ;;
       *green*) color=32 ;;

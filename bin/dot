@@ -2,10 +2,12 @@
 set -euo pipefail
 IFS=$' \n\t'
 
-source "${DOTFILES_HOME}/scripts/core/main.sh"
-source "${DOTFILES_HOME}/scripts/core/log.sh"
-source "${DOTFILES_HOME}/scripts/core/help.sh"
-source "${DOTFILES_HOME}/scripts/core/args.sh"
+scripts_dir=$DOTS_HOME/scripts
+
+source "$scripts_dir/core/main.sh"
+source "$scripts_dir/core/log.sh"
+source "$scripts_dir/core/help.sh"
+source "$scripts_dir/core/args.sh"
 
 _alias() {
     local -r command=$1
@@ -22,7 +24,7 @@ doc::cmd_help() {
 }
 
 contexts::list_commands() {
-    local -r contexts=($(find "$DOTFILES_HOME/scripts" -mindepth 2 -maxdepth 2 -executable -type f | grep -v core | sort))
+    local -r contexts=($(find $scripts_dir -mindepth 2 -maxdepth 2 -executable -type f | grep -v core | sort))
 
     echo
     for c in "${contexts[@]}"; do
@@ -37,7 +39,7 @@ contexts::list_commands() {
 
 contexts::ctx_commands() {
     local -r ctx="$1"
-    local -r commands=($(find "$DOTFILES_HOME/scripts/$ctx" -maxdepth 1 -mindepth 1 -executable -type f | sort))
+    local -r commands=($(find "$scripts_dir/$ctx" -maxdepth 1 -mindepth 1 -executable -type f | sort))
 
     echo
     for c in "${commands[@]}"; do
@@ -68,5 +70,5 @@ else
     command="$2"
     shift 2
 
-    "${DOTFILES_HOME}/scripts/${context}/${command}" "$@"
+    "$scripts_dir/$context/$command" "$@"
 fi

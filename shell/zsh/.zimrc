@@ -1,0 +1,28 @@
+# If you modify this file execute 'zimfw uninstall & zimfw install'
+
+# Sets sane Zsh built-in environment options
+zmodule zimfw/environment
+# Provides handy git aliases and functions
+zmodule zimfw/git
+# Zsh history
+zmodule zimfw/history
+# Applies correct bindkeys for input evenst
+zmodule zimfw/input
+# Utility aliases and functions. Add colour to ls, grep and less
+zmodule zimfw/utility
+
+# Exposes git repository status information to prompts
+zmodule git-info
+# A fork of the Powerline-inspired agnoster prompt theme
+zmodule zimfw/eriner
+
+# Fish-like autosuggestions for Zsh
+zmodule zsh-users/zsh-autosuggestions
+# Fish-like syntax highlighting for Zsh
+zmodule zsh-users/zsh-syntax-highlighting
+# Additional completion definitions for Zsh
+zmodule zsh-users/zsh-completions
+# Enables and configures smart and extensive tab completion
+zmodule zimfw/completion
+
+zhighlighters=(main brackets)

@@ -3,7 +3,7 @@ set -euo pipefail
 
 ##? Change wallpaper
 
-wp_dir="$DOTFILES_HOME/misc"
+wp_dir="$DOTS_HOME/misc"
 
 cp $wp_dir/$1 $wp_dir/.wallpaper.jpg
 feh --bg-scale $wp_dir/.wallpaper.jpg

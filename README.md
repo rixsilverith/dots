@@ -1,8 +1,7 @@
-<h1 align="center">Dotfiles and Configs</h1>
+<h1 align="center"><a href="https://medium.com/@webprolific/getting-started-with-dotfiles-43c3602fd789">.files</a> and configs</h1>
 <p align="center">
-<img style="margin:5px;" src="https://img.shields.io/github/license/rixsilverith/dotfiles?style=flat-square"/>
-<img style="margin:5px; "src="https://img.shields.io/badge/distro-Arch-48b9c7?style=flat-square"/>
-<img style="margin:5px; "src="https://img.shields.io/badge/wm-bspwm-48b9c7?style=flat-square"/>
+<img style="margin:5px;" height=30px src="https://img.shields.io/github/license/rixsilverith/dots?style=for-the-badge"/>
+<img style="margin:5px;" height=30px src="https://forthebadge.com/images/badges/works-on-my-machine.svg"/>
 </p>
 
 <p align="center">
@@ -10,16 +9,15 @@
 </p>
 
 <p align="center">
-  <a href="#-installation">Installation</a>&nbsp;&nbsp;•&nbsp;
   <a href="bin/dot"><code>dot</code></a>&nbsp;&nbsp;•&nbsp;
   <a href="scripts">Scripts</a>&nbsp;&nbsp;•&nbsp;
-  <a href="git/.gitconfig">Git configuration</a>
+  <a href="shell">Shell</a>
 </p>
 
 ## Installation
 The installation of this dotfiles is pretty straightforward: just run the next command in your terminal and follow the installation process.
 ```bash
-bash <curl -s https://raw.githubusercontent.com/rixsilverith/dotfiles/master/installer>
+curl -s https://raw.githubusercontent.com/rixsilverith/dots/master/installer
 ```
 
 ## Running the `dot` command
@@ -32,7 +30,7 @@ In a few words, a *context* is a group of related scripts. For instance, the scr
 ## Updating the dotfiles
 Updating the dotfiles is as simple as running `dot self update` in your terminal. This script will check for updates by looking the [dot](bin/dot) file in this repo and comparing it with the one you have in your machine. If an updated version is found, the `update` script will ask you if you wanna procceed with the installation. You can check the current version by running `dot -v`.
 
-*Warning*: Note that this process may break your system configuration, and for this reason is strongly recommended to backup your current dotfiles folder before installing the update, by default `$HOME/.dotfiles`.
+*Warning*: Note that this process may break your system configuration, and for this reason is strongly recommended to backup your current dotfiles folder before installing the update, by default `$HOME/.dots`.
 
 ## References
 - The `dot` command, as well as some scripts in these dotfiles, is pretty much based on the [denisidoro](https://github.com/denisidoro/dotfiles) and [rgomezcasas](https://github.com/rgomezcasas/dotfiles) developed for their own dotfiles.

@@ -1,0 +1,25 @@
+#! /bin/sh
+
+# Truncate a couple of common commands used here
+_bc() { bspc config "$@"; }
+_br() { bspc rule "$@"; }
+
+# Run sxhkd (daemon for key bindings)
+pgrep -x sxhkd > /dev/null || sxhkd &
+# Run Polybar
+$DOTS_HOME/wm/polybar/launch.sh
+
+# Define workspaces
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# bspwm's graphical appearance
+_bc border_width         0
+_bc window_gap          12
+
+# bspwm's tiling rules
+_bc split_ratio          0.52
+_bc borderless_monocle   true
+_bc gapless_monocle      true
+
+# Application-specific rules
+_br -a Zathura state=tiled

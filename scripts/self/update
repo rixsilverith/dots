@@ -3,27 +3,10 @@ set -euo pipefail
 
 ##? Check for updates and sync the dotfiles
 
-source "${DOTFILES_HOME}/scripts/core/log.sh"
-
-apply_symlinks() {
-    ln -sf "$DOTFILES_HOME/bin" "$HOME"
-    mv "$HOME/bin" "$HOME/.bin"
-
-    ln -sf "$DOTFILES_HOME/scripts" "$HOME"
-    mv "$HOME/scripts" "$HOME/.scripts"
-
-    ln -sf "$DOTFILES_HOME/themes" "$HOME"
-    mv "$HOME/themes" "$HOME/.themes"
-
-    ln -sf "$DOTFILES_HOME/icons" "$HOME"
-    mv "$HOME/icons" "$HOME/.icons"
-
-    ln -sf "$DOTFILES_HOME/misc" "$HOME"
-    mv "$HOME/misc" "$HOME/.misc"
-}
+source "$DOTS_HOME/scripts/core/log.sh"
 
 project_status() {
-    cd "$DOTFILES_HOME" || exit
+    cd "$DOTS_HOME" || exit
 
     local -r UPSTREAM="master"
     local -r LOCAL=$(git rev-parse @)
@@ -42,7 +25,7 @@ project_status() {
 }
 
 self_update() {
-    cd "$DOTFILES_HOME" || exit
+    cd "$DOTS_HOME" || exit
 
     _info "Checking for updates..."
 

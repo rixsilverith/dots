@@ -3,7 +3,7 @@ set -euo pipefail
 
 ##? Kills a process given its name
 
-source "${DOTFILES_HOME}/scripts/core/log.sh"
+source "$DOTS_HOME/scripts/core/log.sh"
 
 ps aux |
     grep $1 |

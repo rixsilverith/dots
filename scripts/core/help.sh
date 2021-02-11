@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -euo pipefail
 
-source "${DOTFILES_HOME}/scripts/core/log.sh"
+source "$DOTS_HOME/scripts/core/log.sh"
 
 doc::help() {
     echo
