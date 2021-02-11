@@ -1,4 +1,9 @@
+# Linux directories
 .config/
 .cache/
 .local/
 
+# Compiled Zsh
+shell/zsh/**/**.zwc
+shell/zsh/**/**.zwc.old
+shell/zsh/**/**.zcompdump
