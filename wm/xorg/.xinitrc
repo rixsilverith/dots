@@ -17,15 +17,15 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 
 # start some nice programs
 if [ -d /etc/X11/xinit/xinitrc.d ] ; then
-    for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-        [ -x "$f" ] && . "$f"
-    done
-    unset f
+ for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+  [ -x "$f" ] && . "$f"
+ done
+ unset f
 fi
 
 # autostart before the window manager
 setxkbmap es &
-feh --bg-scale $HOME/.dots/misc/.wallpaper.jpg
+feh --bg-scale $HOME/.dots/misc/walls/leaves.jpg
 xsetroot -cursor_name left_ptr &
 udiskie &
 picom -f &
