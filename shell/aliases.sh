@@ -15,6 +15,7 @@ alias lla='ls -la'
 
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
+alias cat="$DOTS_HOME/scripts/system/cat"
 
 alias nv='nvim'
 
