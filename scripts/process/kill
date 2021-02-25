@@ -6,11 +6,11 @@ set -euo pipefail
 source "$DOTS_HOME/scripts/core/log.sh"
 
 ps aux |
-    grep $1 |
-    grep -v grep |
-    grep -v kill |
-    awk '{print $2}' |
-    xargs kill -9
+  grep $1 |
+  grep -v grep |
+  grep -v kill |
+  awk '{print $2}' |
+  xargs kill -9
 
 echo
 log::success "Done!"

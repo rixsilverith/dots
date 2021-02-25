@@ -13,11 +13,11 @@ purple=$(tput setaf 5)
 bold=$(tput bold)
 reset=$(tput sgr0)
 
-_info()    { _w " ${bold}${green}>${reset} $1"; }
-_success() { _w " ${green}✔ $1${reset}"; }
-_warning() { _w " ${yellow}${bold}!${reset}${yellow} $1${reset}"; }
-_error()   { _w " ${red}✖ $1${reset}"; }
-_quest()   { read -rp "${bold}$1${reset} " "$2"; }
+log::info()    { _w " ${bold}${green}>${reset} $1"; }
+log::success() { _w " ${green}✔  $1${reset}"; }
+log::warn()    { _w " ${yellow}${bold}! $1${reset}"; }
+log::error()   { _w " ${red}✖  $1${reset}"; }
+log::quest()   { read -rp "${bold}$1${reset} " "$2"; }
 
 feedback::confirmation() {
     local -r msg="$1"
@@ -155,8 +155,8 @@ _header() {
    printf "%${right}s" '' | tr ' ' =
 }
 
-log::header()  { _log "\n$()$(log::color bold)%s$(log::color reset)\n" "$@"; }
-log::success() { _log "$(log::color green)✔ %s$(log::color reset)\n" "$@"; }
-log::error()   { _log "$(log::color red)✖ %s$(log::color reset)\n" "$@"; }
-log::warning() { _log "$(log::color yellow)➜ %s$(log::color reset)\n" "$@"; }
-log::info()    { _log "$(log::color blue)%s$(log::color reset)\n" "$@"; }
+#log::header()  { _log "\n$()$(log::color bold)%s$(log::color reset)\n" "$@"; }
+#log::success() { _log "$(log::color green)✔ %s$(log::color reset)\n" "$@"; }
+#log::error()   { _log "$(log::color red)✖ %s$(log::color reset)\n" "$@"; }
+#log::warning() { _log "$(log::color yellow)➜ %s$(log::color reset)\n" "$@"; }
+#log::info()    { _log "$(log::color blue)%s$(log::color reset)\n" "$@"; }

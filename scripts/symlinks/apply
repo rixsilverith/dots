@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+##? Apply dotfiles symlinks
+
+source "$DOTS_HOME/scripts/core/log.sh"
+
+symlinks::apply() {
+  local -r symlinks_config="$DOTS_HOME/symlinks.yaml"
+  shift
+  echo
+  "$DOTS_HOME/modules/dotbot/bin/dotbot" -d $DOTS_HOME -c $symlinks_config "$@"
+  echo
+}
+
+symlinks::apply

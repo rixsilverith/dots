@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-set -euo pipefail
-
-##? Disconnect from the currently active wireless network

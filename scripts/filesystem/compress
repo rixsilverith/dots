@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+##? Compress a file in the given format

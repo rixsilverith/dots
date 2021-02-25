@@ -1,74 +1,68 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 IFS=$' \n\t'
 
-scripts_dir=$DOTS_HOME/scripts
-
-source "$scripts_dir/core/main.sh"
-source "$scripts_dir/core/log.sh"
-source "$scripts_dir/core/help.sh"
-source "$scripts_dir/core/args.sh"
+source "$DOTS_HOME/scripts/core/log.sh"
+source "$DOTS_HOME/scripts/core/help.sh"
+source "$DOTS_HOME/scripts/core/args.sh"
 
 _alias() {
-    local -r command=$1
-    case $command in
-        net) echo network ;;
-        sys) echo system ;;
-        *)   echo $command ;;
-    esac
+  local -r command=$1
+  case $command in
+    fs)  echo filesystem ;;
+    sys) echo system ;;
+    *)   echo $command ;;
+  esac
 }
 
 doc::cmd_help() {
-    local -r file="$1"
-    grep "^##?" "$file" | cut -c 5-
+  local -r file="$1"
+  grep "^##?" "$file" | cut -c 5-
 }
 
 contexts::list_commands() {
-    local -r contexts=($(find $scripts_dir -mindepth 2 -maxdepth 2 -executable -type f | grep -v core | sort))
-
-    echo
-    for c in "${contexts[@]}"; do
-        cmd_help=$(doc::cmd_help "$c")
-        ctx=$(echo $c | awk -F"/" '{print $(NF-1)}')
-        cmd=$(echo $c | awk -F"/" '{print $NF}')
-        cs=$(echo -e "\t$ctx $(tput bold)$cmd$(tput sgr0)")
-        printf "%-30s %-30s\n" "$cs" "$cmd_help"
-    done
-    echo
+  local -r contexts=($(find "$DOTS_HOME/scripts" -mindepth 2 -maxdepth 2 -executable -type f | grep -v core | sort))
+  echo
+  for c in "${contexts[@]}"; do
+    cmd_help=$(doc::cmd_help "$c")
+    ctx=$(echo $c | awk -F"/" '{print $(NF-1)}')
+    cmd=$(echo $c | awk -F"/" '{print $NF}')
+    cs=$(echo -e "\t$ctx $(tput bold)$cmd$(tput sgr0)")
+    printf "%-35s %-30s\n" "$cs" "$cmd_help"
+  done
+  echo
 }
 
 contexts::ctx_commands() {
-    local -r ctx="$1"
-    local -r commands=($(find "$scripts_dir/$ctx" -maxdepth 1 -mindepth 1 -executable -type f | sort))
-
-    echo
-    for c in "${commands[@]}"; do
-        cmd_help=$(doc::cmd_help "$c")
-        cmd=$(echo $c | awk -F"/" '{ print $NF }')
-        cs=$(echo -e "\t$(tput bold)$cmd$(tput sgr0)")
-        printf "%-25s %-30s\n" "$cs" "$cmd_help"
-    done
-    echo
+  local -r ctx="$1"
+  local -r commands=($(find "$DOTS_HOME/scripts/$ctx" -maxdepth 1 -mindepth 1 -executable -type f | sort))
+  echo
+  for c in "${commands[@]}"; do
+    cmd_help=$(doc::cmd_help "$c")
+    cmd=$(echo $c | awk -F"/" '{ print $NF }')
+    cs=$(echo -e "\t$(tput bold)$cmd$(tput sgr0)")
+    printf "%-25s %-30s\n" "$cs" "$cmd_help"
+  done
+  echo
 }
 
 if args::has_no_args "$@"; then
-    contexts::list_commands
+  contexts::list_commands
 
 elif args::total_is 1 "$@"; then
-    context="$1"
+  context="$1"
 
-    case $context in
-        -h|--help) doc::help "$@" && exit ;;
-        -c|--contexts) contexts::list_commands "$@" && exit ;;
-        -v|--version) _version && exit ;;
-    esac
+  case $context in
+    -h|--help) doc::help "$@" && exit ;;
+    -c|--contexts) contexts::list_commands "$@" && exit ;;
+  esac
 
-    contexts::ctx_commands $context
+  contexts::ctx_commands $context
 
 else
-    context="$1"
-    command="$2"
-    shift 2
+  context="$1"
+  command="$2"
+  shift 2
 
-    "$scripts_dir/$context/$command" "$@"
+  "$DOTS_HOME/scripts/$context/$command" "$@"
 fi
