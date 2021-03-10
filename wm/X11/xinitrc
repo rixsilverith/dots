@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Define the directory where the Zsh configuration files live 
-export ZDOTDIR=$HOME/.dots/shell/zsh
-
 # Xorg related files
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
@@ -12,8 +9,8 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 # merge in defaults and keymaps
 [[ -f $sysresources ]] && xrdb -merge $sysresources
 [[ -f $sysmodmap ]] && xmodmap $sysmodmap
-[[ -f "$userresources" ]] && xrdb -merge "$userresources"
-[[ -f "$usermodmap" ]] && xmodmap "$usermodmap"
+[[ -f $userresources ]] && xrdb -merge $userresources
+[[ -f $usermodmap ]] && xmodmap $usermodmap
 
 # start some nice programs
 if [ -d /etc/X11/xinit/xinitrc.d ] ; then
@@ -25,7 +22,7 @@ fi
 
 # autostart before the window manager
 setxkbmap es &
-feh --bg-scale $HOME/.dots/misc/walls/leaves.jpg
+feh --bg-scale --no-fehbg $HOME/.dots/misc/walls/.wall.jpg
 xsetroot -cursor_name left_ptr &
 udiskie &
 picom -f &
