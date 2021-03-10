@@ -10,6 +10,9 @@ source "$ZIM_HOME/init.zsh"
 # Load shared shell aliases and environment variables
 source "$DOTS_HOME/shell/init.sh"
 
+# Load Z
+source "$DOTS_HOME/modules/z/z.sh"
+
 # Async mode for autocompletion
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_HIGHLIGHT_MAXLENGTH=300
