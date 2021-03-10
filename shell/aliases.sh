@@ -32,6 +32,9 @@ alias diff='diff --color=auto'
 # Add a cute cat to the cat command
 alias cat="$DOTS_HOME/scripts/system/cat"
 
+# Simpler command to give execution permissions
+alias chmox='chmod +x'
+
 # Shorter `nvim` command
 alias nv='nvim'
 
@@ -74,3 +77,6 @@ alias gnuke='git clean -df && git reset --hard'
 
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
+
+# Use $XINITRC variable if file exists
+[ -f "$XINITRC" ] && alias startx="startx $XINITRC"
