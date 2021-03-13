@@ -4,7 +4,7 @@ super + Return
 
 # application launcher
 ctrl + @space
-    rofi -show drun -theme /home/rix/.config/rofi/ndarkin2
+    rofi -show drun -theme /home/rix/.dots/util/rofi/ndarkin2
 
 # reload sxhkd config
 super + Escape
