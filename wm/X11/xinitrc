@@ -20,10 +20,4 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-# autostart before the window manager
-setxkbmap es &
-feh --bg-scale --no-fehbg $HOME/.dots/misc/walls/.wall.jpg
-xsetroot -cursor_name left_ptr &
-udiskie &
-picom -f &
 exec bspwm

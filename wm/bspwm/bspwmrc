@@ -4,8 +4,12 @@
 _bc() { bspc config "$@"; }
 _br() { bspc rule "$@"; }
 
-# Run sxhkd (daemon for key bindings)
-pgrep -x sxhkd > /dev/null || sxhkd &
+# Source common autostart
+source $DOTS_HOME/wm/autostart.sh
+
+# Load keybinds using Sxhkd
+pgrep -x sxhkd > /dev/null || sxhkd -c keybinds &
+
 # Run Polybar
 $DOTS_HOME/wm/polybar/launch.sh
 
