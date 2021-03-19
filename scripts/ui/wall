@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+##? Change wallpaper given its name
+
+walls_dir="$DOTS_HOME/misc/walls"
+wall_name=$1
+
+list_walls() {
+  local -r walls=($(fd . $walls_dir --extension jpg))
+  for wall in ${walls[@]}; do
+    wall_name=${wall%.jpg}
+    wall_name=${wall_name##*/}
+    echo $wall_name
+  done
+  exit 0
+}
+
+set_wall() {
+  cp $walls_dir/${1}.jpg $walls_dir/.wall.jpg
+  feh --bg-scale --no-fehbg $walls_dir/.wall.jpg
+
+  notify-send "Wall changed to ${1}!"
+}
+
+[[ -z $wall_name ]] && list_walls
+
+set_wall $wall_name
+

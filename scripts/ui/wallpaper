@@ -1,9 +1,0 @@
-#!/usr/bin/bash
-set -euo pipefail
-
-##? Change wallpaper
-
-wp_dir="$DOTS_HOME/misc/walls"
-
-cp $wp_dir/$1 $wp_dir/.wallpaper.jpg
-feh --bg-scale $wp_dir/.wallpaper.jpg
