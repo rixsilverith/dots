@@ -1,0 +1,22 @@
+- clean: ['~']
+
+- defaults:
+    link:
+        create: true
+        force: true
+
+- create:
+    - ~/.local/share/.z
+
+- link:
+    ~/.bashrc: shell/bash/.bashrc
+    ~/.bash_profile: shell/bash/.bash_profile
+    ~/.config/alacritty/alacritty.yml: wm/alacritty/alacritty.yml
+    ~/.config/bspwm/bspwmrc: wm/bspwm/bspwmrc
+    ~/.config/dunst/dunstrc: wm/dunst/dunstrc
+    ~/.config/git/config: git/.gitconfig
+    ~/.config/git/ignore: git/.gitignore_global
+    ~/.config/nvim/init.vim: editors/neovim/init.vim
+    ~/.config/neofetch/config.conf: util/neofetch/config.conf
+    ~/.config/redshift/redshift.conf: util/redshift/redshift.conf
+    ~/.config/zathura/zathurarc: util/zathura/zathurarc
