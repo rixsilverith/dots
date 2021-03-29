@@ -3,5 +3,8 @@ shell/zsh/**/**.zwc
 shell/zsh/**/**.zwc.old
 shell/zsh/**/**.zcompdump
 
+# Python cache
+/**/__pycache__/
+
 # Current wallpaper
 misc/walls/.wall.jpg
