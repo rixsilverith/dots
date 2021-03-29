@@ -18,5 +18,6 @@
     ~/.config/git/ignore: git/.gitignore_global
     ~/.config/nvim/init.vim: editors/neovim/init.vim
     ~/.config/neofetch/config.conf: util/neofetch/config.conf
+    ~/.config/qtile: wm/qtile
     ~/.config/redshift/redshift.conf: util/redshift/redshift.conf
     ~/.config/zathura/zathurarc: util/zathura/zathurarc
