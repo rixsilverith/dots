@@ -22,4 +22,4 @@ fi
 
 source $DOTS_HOME/wm/autostart.sh
 
-exec bspwm
+exec qtile
