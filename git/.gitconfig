@@ -29,13 +29,3 @@
     added = yellow
     changed = green
     untracked = cyan
-
-[alias]
-    # View abbreviated SHA, description, and history graph of the latest 20 commits
-    log = log --pretty=oneline -n 20 --graph --abbrev-commit
-    # View the current working tree status using the short format
-    status = status -s
-    # Show the diff between the latest commit and the current state
-    diff = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
-    # Simpler command to list all branches
-    branches = branch --all

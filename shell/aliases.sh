@@ -39,7 +39,7 @@ alias chmox='chmod +x'
 alias nv='nvim'
 
 # Networking
-alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
+# alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias localip='ifconfig getifaddr enp5s0'
 alias whois='whois -h whois-servers.net'
 
@@ -66,13 +66,22 @@ alias gputemp='watch -n 0 "nvidia-smi -q -d temperature"'
 # Display current clock speed
 alias clockspeed='watch -n 0 "lscpu | grep \"Mhz\""'
 
-# Git
-alias gst='git status'
-alias gl='git log'
+# View the current working tree status using the short format
+alias gst='git status -s'
+# View abbreviated SHA, description, and history graph of the latest 20 commits
+alias gl='git log --pretty=oneline -n 20 --graph --abbrev-commit'
+# Stage all changes in the working directory
 alias gaa='git add -A'
-alias gus='git restore --staged'
+# Easy restore a staged file
+alias grs='git restore --staged'
+# Show the diff between the latest commit and the current state
+alias gdf='git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat'
+# Simpler command to list all branches
+alias gbr='git branch --all'
+# Other Git shortcuts
 alias gpl='git pull'
 alias gps='git push'
+# Careful with this little one
 alias gnuke='git clean -df && git reset --hard'
 
 # Print each PATH entry on a separate line
