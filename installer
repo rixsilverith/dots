@@ -8,6 +8,8 @@ blue=$(tput setaf 6)
 bold=$(tput bold)
 reset=$(tput sgr0)
 
+dot() { "$DOTS_HOME/bin/dot" "$@"; }
+
 _w() {
   local -r text="${1:-}"
   echo -e "$text"
@@ -67,7 +69,7 @@ if ! command_exists zsh; then
   _warn "zsh is not installed in your system"
   _info "Installing zsh"
 
-  ! "$DOTS_HOME/bin/dot" package install zsh && _error "Could not install zsh :("
+  ! dot package install zsh && _error "Could not install zsh :("
 fi
 
 if [[ ! $SHELL == *zsh* ]]; then
@@ -81,6 +83,6 @@ _info "Installing Zim"
 zsh "$ZIM_HOME/zimfw.zsh" install
 
 _info "Applying necessary symlinks"
-"$DOTS_HOME/bin/dot" symlinks apply
+dot symlinks apply
 
 _success "dotfiles installed successfully!\n"
