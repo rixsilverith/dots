@@ -1,6 +1,8 @@
 from libqtile import widget, bar
 from colors import colors
 
+from netstatus import NetStatus
+
 def separator():
     return widget.Sep(**base(), linewidth=0, padding=5)
 
@@ -33,7 +35,7 @@ def workspaces():
         widget.GroupBox(
             **base(fg='light'),
             font='SF Pro Display',
-            fontsize=14,
+            fontsize=25,
             margin_y=3,
             margin_x=0,
             padding_y=8,
@@ -63,9 +65,15 @@ widgets = [
 
     powerline('light', 'dark'),
 
-    widget.Net(**base(bg='light'), interface='enp5s0'),
-    widget.CurrentLayout(**base(bg='light'), padding=5),
-    widget.Clock(**base(bg='light'), format='%a %b %d  %H:%M ')
+    icon(fg='dark', bg='light', fontsize=25, text='墳'),
+    widget.Volume(**base(bg='light'), get_volume_command='pamixer --get-volume', volume_app='pamixer', padding=3),
+
+    icon(fg='dark', bg='light', fontsize=20, text=''),
+
+    icon(fg='dark', bg='light', fontsize=20, text=''),
+    NetStatus(**base(fg='dark', bg='light')),
+
+    widget.Clock(**base(bg='light'), format='%a %b %d  %H:%M ', padding=5)
 ]
 
 widget_defaults = {
