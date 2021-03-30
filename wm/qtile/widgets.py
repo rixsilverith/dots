@@ -2,6 +2,7 @@ from libqtile import widget, bar
 from colors import colors
 
 from netstatus import NetStatus
+from volume import VolumeDisplay
 
 def separator():
     return widget.Sep(**base(), linewidth=0, padding=5)
@@ -66,7 +67,7 @@ widgets = [
     powerline('light', 'dark'),
 
     icon(fg='dark', bg='light', fontsize=25, text='墳'),
-    widget.Volume(**base(bg='light'), get_volume_command='pamixer --get-volume', volume_app='pamixer', padding=3),
+    VolumeDisplay(**base(bg='light', fg='dark')),
 
     icon(fg='dark', bg='light', fontsize=20, text=''),
 
