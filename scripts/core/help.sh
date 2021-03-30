@@ -14,3 +14,15 @@ doc::help() {
     echo -e "\t$(tput bold)dot -c, --contexts$(tput sgr0)                  Show available contexts"
     echo -e "\t$(tput bold)dot <context> <command> -h, --help$(tput sgr0)  Show help for a command\n"
 }
+
+docs::parse() {
+  local -r file="$0"
+  while getopts "h" opt; do
+    case "$opt" in
+    h|\?)
+        grep "^##?" "$file" | cut -c 5-
+        exit 0
+        ;;
+    esac
+  done
+}

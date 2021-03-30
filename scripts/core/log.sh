@@ -18,6 +18,7 @@ log::success() { _w " ${green}✔  $1${reset}"; }
 log::warn()    { _w " ${yellow}${bold}! $1${reset}"; }
 log::error()   { _w " ${red}✖  $1${reset}"; }
 log::quest()   { read -rp "${bold}$1${reset} " "$2"; }
+log::abort()   { log::error "$1"; exit 1; }
 
 feedback::confirmation() {
     local -r msg="$1"

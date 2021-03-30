@@ -6,63 +6,59 @@ source "$DOTS_HOME/scripts/core/log.sh"
 source "$DOTS_HOME/scripts/core/help.sh"
 source "$DOTS_HOME/scripts/core/args.sh"
 
-_alias() {
-  local -r command=$1
-  case $command in
+dot::alias() {
+  local -r context=$1
+  case $context in
     fs)  echo filesystem ;;
+    img) echo image ;;
     sys) echo system ;;
-    *)   echo $command ;;
+    *)   echo $context ;;
   esac
 }
 
-doc::cmd_help() {
-  local -r file="$1"
-  grep "^##?" "$file" | cut -c 5-
+dot::completion() {
+  local paths="$1"
+
+  script="$(
+    echo "$paths" |
+      xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
+      fzf \
+        --layout reverse-list \
+        --height 10% \
+        --min-height 1 \
+        --pointer '➜' \
+        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
+        --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
+  )"
+
+  printf "%s" "$script"
+  #echo -en "\r\033[1A\033[0Kdot $script "
+  read -r args
+
+  "$DOTS_HOME/bin/dot" $script $args
 }
 
-contexts::list_commands() {
-  local -r contexts=($(find "$DOTS_HOME/scripts" -mindepth 2 -maxdepth 2 -executable -type f | grep -v core | sort))
-  echo
-  for c in "${contexts[@]}"; do
-    cmd_help=$(doc::cmd_help "$c")
-    ctx=$(echo $c | awk -F"/" '{print $(NF-1)}')
-    cmd=$(echo $c | awk -F"/" '{print $NF}')
-    cs=$(echo -e "\t$ctx $(tput bold)$cmd$(tput sgr0)")
-    printf "%-35s %-30s\n" "$cs" "$cmd_help"
-  done
-  echo
+dot::script_exists() {
+  [[ -x "$DOTS_HOME/scripts/${1}/${2}" ]]
 }
 
-contexts::ctx_commands() {
-  local -r ctx="$1"
-  local -r commands=($(find "$DOTS_HOME/scripts/$ctx" -maxdepth 1 -mindepth 1 -executable -type f | sort))
-  echo
-  for c in "${commands[@]}"; do
-    cmd_help=$(doc::cmd_help "$c")
-    cmd=$(echo $c | awk -F"/" '{ print $NF }')
-    cs=$(echo -e "\t$(tput bold)$cmd$(tput sgr0)")
-    printf "%-25s %-30s\n" "$cs" "$cmd_help"
-  done
-  echo
+dot::list_scripts() {
+  contexts=$(find "$DOTS_HOME/scripts" -mindepth 2 -maxdepth 2 -executable -type f | grep -v core)
+  printf "%s" "$contexts" | sort -u
 }
 
 if args::has_no_args "$@"; then
-  contexts::list_commands
-
-elif args::total_is 1 "$@"; then
-  context="$1"
-
-  case $context in
-    -h|--help) doc::help "$@" && exit ;;
-    -c|--contexts) contexts::list_commands "$@" && exit ;;
-  esac
-
-  contexts::ctx_commands $context
-
+  dot::completion "$(dot::list_scripts)"
+elif args::total_is 1 && "$1" == "-h"; then
+  dot::show_help
 else
-  context="$1"
-  command="$2"
+  context=$(dot::alias "$1")
+  script="$2"
   shift 2
 
-  "$DOTS_HOME/scripts/$context/$command" "$@"
+  if ! dot::script_exists "$context" "$script"; then
+    log::abort "Script <dot $context $script> doesn't exists"
+  fi
+
+  "$DOTS_HOME/scripts/$context/$script" "$@"
 fi
