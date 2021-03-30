@@ -1,9 +1,12 @@
 #!/usr/bin/bash
 set -euo pipefail
 
-##? Cleans useless files such as cache, empties trash, etc.
+source "$DOTS_HOME/scripts/core/dot.sh"
 
-source "$DOTS_HOME/scripts/core/log.sh"
+##? Cleans useless files such as cache, empties trash, etc.
+##?
+##? Usage: dot (system | sys) clean
+docs::parse "$@"
 
 if ! has gio; then
   i=$(feedback::confirmation "This script uses the gio command. Wanna install it?")
@@ -14,4 +17,7 @@ if ! has gio; then
 fi
 
 gio trash --empty
+
+log::info "Cleaning Zsh cache..."
+find $ZDOTDIR -name "*.zwc" -delete
 

@@ -1,17 +1,20 @@
 #!/usr/bin/bash
 set -euo pipefail
 
-##? Kills a process given its name
+source "$DOTS_HOME/scripts/core/dot.sh"
 
-source "$DOTS_HOME/scripts/core/log.sh"
+##? Kills a process given its name
+##?
+##? Usage: dot process kill <process_name>
+docs::parse "$@"
+
+process_name="$1"
 
 ps aux |
-  grep $1 |
+  grep "$process_name" |
   grep -v grep |
   grep -v kill |
   awk '{print $2}' |
   xargs kill -9
 
-echo
-log::success "Done!"
-echo
+log::success "Process <$process_name> killed successfully!"

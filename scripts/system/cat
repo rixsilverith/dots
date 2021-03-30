@@ -1,6 +1,11 @@
 #!/bin/bash
 
+source "$DOTS_HOME/scripts/core/dot.sh"
+
 ##? Bash cat with cat
+##?
+##? Usage: dot (system | sys) cat <file>
+docs::parse "$@"
 
 # See https://github.com/GuidoFe/bash-cat-with-cat
 
@@ -46,7 +51,7 @@ LOWER_LINE_INDEX=4
 PADDING=1
 
 # Percentage that indicates the position of the drawing
-# in the terminal. 0 = align to the left, 100 = align to 
+# in the terminal. 0 = align to the left, 100 = align to
 # the right
 DRAWING_POSITION=30
 
@@ -81,7 +86,7 @@ for i in $(seq 0 $arrayLen); do
         else
             car=" "
         fi
-    
+
         for s in $(seq 1 $leadingSpaces); do
             printf "$car"
         done

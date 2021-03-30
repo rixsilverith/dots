@@ -1,9 +1,12 @@
 #!/usr/bin/bash
 set -euo pipefail
 
-##? Check for updates and sync the dotfiles
+source "$DOTS_HOME/scripts/core/dot.sh"
 
-source "$DOTS_HOME/scripts/core/log.sh"
+##? Check for updates and sync the dotfiles
+##?
+##? Usage: dot self update
+docs::parse "$@"
 
 dotfiles_status() {
   cd "$DOTS_HOME" || exit

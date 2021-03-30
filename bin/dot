@@ -2,54 +2,11 @@
 set -euo pipefail
 IFS=$' \n\t'
 
-source "$DOTS_HOME/scripts/core/log.sh"
-source "$DOTS_HOME/scripts/core/help.sh"
-source "$DOTS_HOME/scripts/core/args.sh"
-
-dot::alias() {
-  local -r context=$1
-  case $context in
-    fs)  echo filesystem ;;
-    img) echo image ;;
-    sys) echo system ;;
-    *)   echo $context ;;
-  esac
-}
-
-dot::completion() {
-  local paths="$1"
-
-  script="$(
-    echo "$paths" |
-      xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
-      fzf \
-        --layout reverse-list \
-        --height 10% \
-        --min-height 1 \
-        --pointer '➜' \
-        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
-        --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
-  )"
-
-  printf "%s" "$script"
-  #echo -en "\r\033[1A\033[0Kdot $script "
-  read -r args
-
-  "$DOTS_HOME/bin/dot" $script $args
-}
-
-dot::script_exists() {
-  [[ -x "$DOTS_HOME/scripts/${1}/${2}" ]]
-}
-
-dot::list_scripts() {
-  contexts=$(find "$DOTS_HOME/scripts" -mindepth 2 -maxdepth 2 -executable -type f | grep -v core)
-  printf "%s" "$contexts" | sort -u
-}
+source "$DOTS_HOME/scripts/core/dot.sh"
 
 if args::has_no_args "$@"; then
   dot::completion "$(dot::list_scripts)"
-elif args::total_is 1 && "$1" == "-h"; then
+elif [[ $# -eq 1 && "$1" == "-h" ]]; then
   dot::show_help
 else
   context=$(dot::alias "$1")

@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-##? Apply dotfiles symlinks
+source "$DOTS_HOME/scripts/core/dot.sh"
 
-source "$DOTS_HOME/scripts/core/log.sh"
+##? Apply dotfiles symlinks
+##?
+##? Usage: dot symlinks apply
+docs::parse "$@"
 
 symlinks::apply() {
   local -r symlinks_config="$DOTS_HOME/symlinks.yaml"

@@ -1,6 +1,11 @@
 #!/usr/bin/bash
 
+source "$DOTS_HOME/scripts/core/dot.sh"
+
 ##? Change wallpaper given its name
+##?
+##? Usage: dot ui wall <name>
+docs::parse "$@"
 
 walls_dir="$DOTS_HOME/misc/walls"
 wall_name=$1

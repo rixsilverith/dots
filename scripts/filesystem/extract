@@ -1,6 +1,11 @@
 #!/usr/bin/bash
 
+source "$DOTS_HOME/scripts/core/dot.sh"
+
 ##? Extract a compressed file
+##?
+##? Usage: dot (filesystem | fs) extract <file>
+docs::parse "$@"
 
 source "$DOTS_HOME/scripts/core/log.sh"
 
