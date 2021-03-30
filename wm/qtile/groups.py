@@ -1,14 +1,10 @@
-from libqtile.config import Key, Group
+from libqtile.config import Key, Group, Match
 from libqtile.command import lazy
-from keys import mod, keys
 
-groups = [Group(i) for i in "123456789"]
+groups = [
+    Group('other', label='  '),
 
-for i, group in enumerate(groups):
-    current_key = str(i + 1)
-    keys.extend([
-        # Switch to group N
-        Key([mod], current_key, lazy.group[group.name].toscreen()),
-        # Send window to group N
-        Key([mod, "shift"], current_key, lazy.window.togroup(group.name))
-    ])
+    Group('term', label='  ', init=False, persist=False, matches=[Match(wm_class=['Alacritty'])], position=1),
+    Group('browser', label='  ', init=False, persist=False, matches=[Match(wm_class=['firefox'])], position=2),
+    Group('discord', label='  ', init=False, persist=False, matches=[Match(wm_class=['discord'])], position=3),
+]
