@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Optimize an image preserving the original
+##?
+##? Usage: dot (image | img) optimize <file>
+docs::parse "$@"
+
+filename=$1
+
+[ -f $filename ] || log::abort "$filename is not a valid file!"
+
+orig_file=$(echo "$filename" | sed 's/\(.*\)\./\1.original./')
+
+cp $filename $orig_file
+jpegoptim --max 85 -q $filename
+
+log::success "File <$filename> optimized!"
