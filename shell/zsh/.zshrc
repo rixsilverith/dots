@@ -1,8 +1,10 @@
-# Zsh configuration file
-
 # Remove older command from the history if a duplicate is to be added
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FCNTL_LOCK
+# Change directory by typing only its name
+setopt autocd
+# Extended globbing
+setopt extendedglob
 
 # Get Zim to work
 source "$ZIM_HOME/init.zsh"
@@ -21,8 +23,3 @@ ZSH_HIGHLIGHT_MAXLENGTH=300
 HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 HISTSIZE=1000
 SAVEHIST=1000
-
-# Change directory by typing only its name
-setopt autocd
-# Extended globbing
-setopt extendedglob
