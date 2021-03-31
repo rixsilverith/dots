@@ -28,7 +28,7 @@ keys = [Key(key[0], key[1], *key[2:]) for key in [
     ([mod, "control"], "q", lazy.shutdown()),
 
     # Application specific keybinds
-    ([mod], "m", lazy.spawn("rofi -show drun -theme /home/rix/.dots/wm/rofi/ndarkin2")),
+    ([mod], "m", lazy.spawn("rofi -show drun")),
     ([mod], "b", lazy.spawn("firefox")),
     ([mod], "e", lazy.spawn("thunar")),
     ([mod], "Return", lazy.spawn("alacritty")),

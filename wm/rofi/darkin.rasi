@@ -1,8 +1,8 @@
 * {
-    background-color: #0F1212;
-    text-color: #D3D7CF;
+    background-color: #000000;
+    text-color: #7D7D7D;
 
-    selected-background: #E3E3E3;
+    selected-background: #F1FFFF;
     active-background: #E3E3E3;
     urgent-background: #E3E3E3;
     window-background: @background-color;
@@ -23,109 +23,54 @@
     active-background: @selected-background;
 
     separator-style: "none";
+
     margin: 0;
+    padding: 0;
     spacing: 0;
-    
-    //font: "Iosevka Bold 13";
-    font: "SF Pro Text Medium 13";
+    border: 0;
+
+    font: "Iosevka Nerd Font Medium 12";
 }
 
 window {
-    width: 600px;
+    width: 550px;
     background-color: @background-color;
     border-radius: 2px;
-    // location: 8;
-    yoffset: 100px;
-    // children: [mainbox];
+    location: center;
+    anchor: center;
 }
 
 mainbox {
-    border: 0;
-    padding: 20;
-    // orientation: vertical;
-    // children: [entry, message, listview, mode-switcher];
+    children: [inputbar, listview];
 }
 
 entry {
-    padding: 8;
+    padding: 12 0 12 0;
+    text-color: @selected-background;
 }
 
 
 inputbar {
-    border: 0 solid 0 solid 1 solid 0 solid;
-    spacing: 0;
-    margin: 0;
-    border-color: silver;
-    // children: [prompt, entry];
+    children: [prompt, entry];
 }
 
 prompt {
-    padding: 8;
-    border: 0 1 0 0;
+    padding: 12 16;
 }
 
 sidebar {
     expand: false;
 }
 
-/*
-textbox {
-    /*
-    background-color: #2e343f;
-    border: 0 0 1px 0;
-    border-color: #282C33;
-    padding: 8px 16px;
-    */
-    horizontal-align: 0;
-    background-color: silver;
-    padding: 10px 20px 10px 20px;
-    text-color: #fff;
-}
-*/
-
 listview {
-    border: 0;
-    padding: 15 0 0 0;
     dynamic: true;
     fixed-height: false;
-    lines: 12;
+    lines: 8;
     spacing: 0;
-    /*
-    dynamic: true;
-    cycle: false;
-    margin: 0 0 -1px 0;
-    scrollbar: true;
-    scrollbar-width: 3px;*/
 }
-
-mode-switcher {
-    margin: 10px 30px 30px 30px;
-}
-
-button {
-    padding: 8px;
-}
-
-button selected {
-    background-color: @selected-normal-background;
-    text-color: @selected-normal-foreground;
-}
-/*
-element {
-    border: 0 0 1px 0;
-    padding: 16px;
-}
-
-element selected {
-    background-color: @text-color;
-    text-color: @background-color;
-}
-*/
 
 #element {
-    border: 0;
-    padding: 8;
-    margin: 5px 0 0 5px;
+    padding: 11 16;
 }
 
 element normal normal {
@@ -158,6 +103,3 @@ element normal normal {
     text-color: @selected-active-foreground;
 }
 
-scrollbar {
-    background-color: #4C566A;
-}

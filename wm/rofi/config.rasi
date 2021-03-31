@@ -5,5 +5,5 @@ configuration {
         display-window:  "Running Apps";
         bw:              0;
 	auto-select:     false;
-        theme:           "ndarkin2";
+        theme:           "darkin";
 }
