@@ -2,6 +2,7 @@
 *.o
 *.out
 *.log
+*.swp
 *.bak
 *.dll
 *.exe
@@ -9,13 +10,17 @@
 *.old.*
 *.no-commit.*
 .Trash-*
+.old/
 
+# Python cache
 __pycache__/
 
+# OS stuff
 .DS_Store
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-.vscode
+# VS Code stuff
+.vscode/

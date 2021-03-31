@@ -1,3 +1,6 @@
+[core]
+    excludesfile = /home/rix/.config/git/ignore_global
+
 [user]
     email = 71402816+rixsilverith@users.noreply.github.com
     name = Rix Silverith
