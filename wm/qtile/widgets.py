@@ -1,8 +1,9 @@
 from libqtile import widget, bar
 from colors import colors
 
-from custom_widgets.netstatus import NetStatus
 from custom_widgets.volume import VolumeDisplay
+from custom_widgets.nightmode import NightModeStatus
+from custom_widgets.netstatus import NetStatus
 
 def base(fg='text', bg='dark'):
     return { 'foreground': colors[fg], 'background': colors[bg] }
@@ -59,7 +60,7 @@ widgets = [
     icon(fg='dark', bg='light', fontsize=25, text='墳'),
     VolumeDisplay(**base(bg='light', fg='dark')),
 
-    icon(fg='dark', bg='light', fontsize=20, text=''),
+    NightModeStatus(**base(bg='light', fg='dark'), fontsize=20, padding=3),
 
     icon(fg='dark', bg='light', fontsize=20, text=''),
     NetStatus(**base(fg='dark', bg='light')),
