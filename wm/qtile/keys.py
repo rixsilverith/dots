@@ -32,8 +32,7 @@ keys = [Key(key[0], key[1], *key[2:]) for key in [
     ([mod], "b", lazy.spawn("firefox")),
     ([mod], "e", lazy.spawn("thunar")),
     ([mod], "Return", lazy.spawn("alacritty")),
-    ([mod], "r", lazy.spawn("redshift -O 3700")),
-    ([mod, "shift"], "r", lazy.spawn("redshift -x")),
+    ([mod], "r", lazy.spawn("dot system night_mode toggle")),
 
     # Multimedia keys
     ([], "XF86AudioLowerVolume", lazy.spawn("pamixer --decrease 5")),

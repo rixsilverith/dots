@@ -8,3 +8,6 @@ shell/zsh/**/**.zcompdump
 
 # Current wallpaper
 misc/walls/.wall.jpg
+
+# Night mode file
+util/redshift/.night-mode

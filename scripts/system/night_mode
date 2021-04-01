@@ -1,0 +1,50 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Use redshift to enable/disable blue screen light reduction
+##?
+##? Usage: dot (system | sys) night_mode <on|off|toggle>
+docs::parse "$@"
+
+# To track whether or not the night mode is enabled, we'll create
+# the DOTS_NIGHT_MODE_FILE file in the redshift directory when night
+# mode is enabled and delete it when it's disabled. This way is
+# pretty easy for other scripts (mainly a custom Qtile widget) to
+# know if night mode is enabled.
+#
+# By using this approach only one key bind is needed to toggle night
+# mode instead of two.
+DOTS_NIGHT_MODE_FILE="$DOTS_HOME/util/redshift/.night-mode"
+
+temp=3700
+
+enable_night_mode() {
+  local -r t="$1"
+  redshift -O $t
+  touch $DOTS_NIGHT_MODE_FILE
+  notify-send "Night mode enabled!"
+}
+
+disable_night_mode() {
+  redshift -x
+  rm -f $DOTS_NIGHT_MODE_FILE
+  notify-send "Night mode disabled!"
+}
+
+toggle_night_mode() {
+  if [[ -f $DOTS_NIGHT_MODE_FILE ]]; then
+    disable_night_mode
+  else
+    enable_night_mode $temp
+  fi
+}
+
+[[ $# -lt 1 ]] && log::abort "Wrong number of arguments"
+
+case "$1" in
+  "on")     enable_night_mode $temp ;;
+  "off")    disable_night_mode ;;
+  "toggle") toggle_night_mode ;;
+  *)        log::abort "Wrong arguments" ;;
+esac
