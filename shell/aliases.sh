@@ -87,5 +87,8 @@ alias gnuke='git clean -df && git reset --hard'
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
 
+# Colorpanes to display terminal emulator color palette
+alias colorpanes='dot wtf colorpanes'
+
 # Use $XINITRC variable if file exists
 [ -f "$XINITRC" ] && alias startx="startx $XINITRC"
