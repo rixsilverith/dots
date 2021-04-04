@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Grow a beautiful bonsai tree in the terminal
+##?
+##? Usage: dot wtf bonsai [seed] [life]
+docs::parse "$@"
+
+# get cbonsai from the AUR: `yay -S cbonsai`
+
+seed=${1:-119}
+life=${2:-33}
+
+cbonsai --live --time 0.015 -s $seed --life $life
