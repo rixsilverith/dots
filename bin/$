@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# Useful when copying and pasting command from the internet
+
+# A "$" is usually put at the beginning of a comamnd to indicate
+# that it must be executed on the command line. When copy-pasting
+# terminal commands from the internet usually you'll end up
+# copying the dollar sign too, leading to something like "command
+# not found" when trying to run the command. This file solves
+# this problem by registering "$" as a valid command which runs
+# everything after the dollar sign as usual.
+
+"$@"
