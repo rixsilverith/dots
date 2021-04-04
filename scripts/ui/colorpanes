@@ -4,7 +4,7 @@ source "$DOTS_HOME/scripts/core/dot.sh"
 
 ##? Colorpanes to display terminal emulator color palette
 ##?
-##? Usage: dot wtf colorpanes
+##? Usage: dot ui colorpanes
 docs::parse "$@"
 
 # Author: GekkoP
