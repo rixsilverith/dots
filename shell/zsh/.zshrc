@@ -23,3 +23,36 @@ ZSH_HIGHLIGHT_MAXLENGTH=300
 HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 HISTSIZE=1000
 SAVEHIST=1000
+
+dot-widget() {
+  source "$DOTS_HOME/scripts/core/dot.sh"
+
+  local paths="$(dot::list_scripts)"
+
+  script="$(
+    echo "$paths" |
+      xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
+      fzf \
+        --layout reverse-list \
+        --height 10% \
+        --min-height 1 \
+        --cycle \
+        --pointer '➜' \
+        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
+        --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
+  )"
+
+  local ret=$?
+
+  script="dot $script"
+  RBUFFER=${script}${RBUFFER}
+
+  zle redisplay
+  typeset -f zle-line-init >/dev/null && zle zle-line-init
+  zle vi-end-of-line
+
+  return $ret
+}
+
+zle -N dot-widget
+bindkey '^f' dot-widget
