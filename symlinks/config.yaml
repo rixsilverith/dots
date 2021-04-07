@@ -14,8 +14,12 @@
     ~/.config/alacritty/alacritty.yml: wm/alacritty/alacritty.yml
     ~/.config/bspwm/bspwmrc: wm/bspwm/bspwmrc
     ~/.config/dunst/dunstrc: wm/dunst/dunstrc
-    ~/.config/git/config: git/.gitconfig
-    ~/.config/git/ignore: git/.gitignore_global
+    ~/.config/git/:
+        create: true
+        glob: true
+        path: git/*
+        relink: true
+    ~/.config/git/ignore_global: git/.gitignore_global
     ~/.config/nvim/init.vim: editors/neovim/init.vim
     ~/.config/neofetch/config.conf: util/neofetch/config.conf
     ~/.config/qtile: wm/qtile
