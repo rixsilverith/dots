@@ -3,6 +3,9 @@ shell/zsh/**/**.zwc
 shell/zsh/**/**.zwc.old
 shell/zsh/**/**.zcompdump
 
+# Compiled binaries
+bin/compiled/
+
 # Python cache
 /**/__pycache__/
 
