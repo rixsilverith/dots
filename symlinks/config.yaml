@@ -19,8 +19,11 @@
         glob: true
         path: git/*
         relink: true
-    ~/.config/git/ignore_global: git/.gitignore_global
-    ~/.config/nvim/init.vim: editors/neovim/init.vim
+    ~/.config/nvim/:
+        create: true
+        glob: true
+        path: editors/*
+        relink: true
     ~/.config/neofetch/config.conf: util/neofetch/config.conf
     ~/.config/qtile: wm/qtile
     ~/.config/redshift/redshift.conf: util/redshift/redshift.conf
