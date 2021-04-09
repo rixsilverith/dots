@@ -14,6 +14,7 @@ dot::alias() {
   case $context in
     fs)  echo filesystem ;;
     img) echo image ;;
+    sec) echo security ;;
     sh)  echo shell ;;
     sys) echo system ;;
     *)   echo $context ;;
@@ -39,25 +40,25 @@ dot::completion() {
         --layout reverse-list \
         --height 10% \
         --min-height 1 \
+        --cycle \
         --pointer '➜' \
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
         --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
   )"
 
   printf "%s" "$script"
-  #echo -en "\r\033[1A\033[0Kdot $script "
   read -r args
 
   "$DOTS_HOME/bin/dot" $script $args
 }
 
 dot::show_help() {
-    echo
-    echo -e "$(tput bold)An entry point for all scripts inside this dotfiles$(tput sgr0)"
-    echo -e "\nUsage: $(tput bold)dot <context> <script> [<args>...]\n"
-    echo -e "\t$(tput bold)dot self update$(tput sgr0)      Check for updates"
-    echo -e "\nOptions:"
-    echo -e "\t$(tput bold)dot -h$(tput sgr0)                      Show this help message"
-    echo -e "\t$(tput bold)dot <context> <script> -h$(tput sgr0)   Show help for a command\n"
+  echo
+  echo -e "$(tput bold)An entry point for all scripts inside this dotfiles$(tput sgr0)"
+  echo -e "\nUsage: $(tput bold)dot <context> <script> [<args>...]\n"
+  echo -e "\t$(tput bold)dot self update$(tput sgr0)      Check for updates"
+  echo -e "\nOptions:"
+  echo -e "\t$(tput bold)dot -h$(tput sgr0)                      Show this help message"
+  echo -e "\t$(tput bold)dot <context> <script> -h$(tput sgr0)   Show help for a command\n"
 }
 
