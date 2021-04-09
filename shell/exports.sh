@@ -25,7 +25,9 @@ export XINITRC="$DOTS_HOME/wm/X11/xinitrc"
 export VSCODE_PORTABLE="$XDG_DATA_HOME/vscode"
 export ALSA_CONFIG_PATH="$XDG_CONFIG_HOME/alsa/asoundrc"
 export HISTFILE="$XDG_DATA_HOME/zsh/history"
-export INPUTRC="${XDG_CONFIG_HOME:-$HOME/.config}/inputrc"
+export INPUTRC="${XDG_CONFIG_HOME:-$HOME/.config}/readline/inputrc"
+export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
+export RUSTUP_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/rustup"
 export _Z_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/.z"
 
 # Add the following directories to the PATH
