@@ -9,16 +9,12 @@ alias ...='cd ../..'
 
 # Colorize `ls` output
 alias ls='ls --color --group-directories-first'
-
 # List files in long format
 alias ll='ls -lh'
-
 # List all files, excluding . and ..
 alias la='ls -A'
-
 # List all files in long format, excluding . and ..
 alias lla='ls -lhA'
-
 # List only directories
 alias lsd='ls -l | grep "^d"'
 
@@ -72,6 +68,8 @@ alias gst='git status -s'
 alias gl='git log --pretty=oneline -n 20 --graph --abbrev-commit'
 # Stage all changes in the working directory
 alias gaa='git add -A'
+# Git add shortcut
+alias ga='git add'
 # Easy restore a staged file
 alias grs='git restore --staged'
 # Show the diff between the latest commit and the current state
@@ -87,8 +85,14 @@ alias gnuke='git clean -df && git reset --hard'
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
 
+# Valgrind shortcut
+alias vgd='valgrind --leak-check=full --track-origins=yes'
+
 # Colorpanes to display terminal emulator color palette
-alias colorpanes='dot wtf colorpanes'
+alias colorpanes='dot ui colorpanes'
+
+# Extract files shortcut
+alias ext='dot filesystem extract'
 
 # Use $XINITRC variable if file exists
 [ -f "$XINITRC" ] && alias startx="startx $XINITRC"
