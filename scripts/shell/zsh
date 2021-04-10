@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Zsh stuff to optimize and benchmark
+##?
+##? Usage: dot (shell|sh) zsh (benchmark|optimize)
+docs::parse "$@"
+
+benchmark() {
+  hyperfine '/bin/zsh -i -c exit' '/usr/bin/zsh -i -c exit' --warmup 1
+  echo -e "Currently using $(tput setaf 3)$(command -v zsh)$(tput sgr0) - $(/bin/zsh --version)\n"
+}
+
+optimize() {
+  find "$DOTS_HOME/shell/zsh" -name '*.zwc' -exec rm -rf {} \;
+  find "$DOTS_HOME/shell/zsh" -name '*.old' -exec rm -rf {} \;
+  find "$DOTS_HOME/modules/zimfw" -name '*.zwc' -exec rm -rf {} \;
+  find "$DOTS_HOME/modules/zimfw" -name '*.old' -exec rm -rf {} \;
+}
+
+cmd="$1"
+shift
+
+case $cmd in
+  "benchmark") benchmark ;;
+  "optimize") optimize ;;
+  *) "$DOTS_HOME/scripts/shell/zsh" -h ;;
+esac
