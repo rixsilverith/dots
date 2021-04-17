@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Updates mirrors using Reflector
+##?
+##? dot (package|pkg) update_mirrors
+docs::parse "$@"
+
+sudo reflector --fastest 30 --latest 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
+notify-send "System" "Updated mirror list with the most up-to-date mirrors, sorted by speed"
