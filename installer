@@ -77,6 +77,9 @@ if [[ ! $SHELL == *zsh* ]]; then
   sudo chsh -s "$(command -v zsh)"
 fi
 
+_info "Configuring zsh. This might need you root permissions"
+echo "export ZDOTDIR=$HOME/.dots/shell/zsh" | sudo tee -a /etc/zsh/zshenv > /dev/null
+
 export ZIM_HOME=$DOTS_HOME/modules/zimfw
 
 _info "Installing Zim"
