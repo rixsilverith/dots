@@ -29,13 +29,13 @@
     spacing: 0;
     border: 0;
 
-    font: "Iosevka Nerd Font Medium 12";
+    font: "SF Pro Text Medium 11";
 }
 
 window {
     width: 550px;
     background-color: @background-color;
-    border-radius: 2px;
+    border-radius: 4px;
     location: center;
     anchor: center;
 }
@@ -48,7 +48,6 @@ entry {
     padding: 12 0 12 0;
     text-color: @selected-background;
 }
-
 
 inputbar {
     children: [prompt, entry];
@@ -70,7 +69,7 @@ listview {
 }
 
 #element {
-    padding: 11 16;
+    padding: 11 20;
 }
 
 element normal normal {
