@@ -43,6 +43,8 @@ display_trash_info() {
 }
 
 empty_trash() {
+  [[ $(fd . $trash | wc -l) -eq 0 ]] && log::info "Trash is empty. Nothing to be removed :D" && exit 0
+
   for file in $trash/*; do
     unlink $file
   done

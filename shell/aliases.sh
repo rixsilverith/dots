@@ -94,5 +94,10 @@ alias colorpanes='dot ui colorpanes'
 # Extract files shortcut
 alias ext='dot filesystem extract'
 
+# Trash
+alias rm='dot filesystem trash'
+alias rmi='dot filesystem trash info'
+alias rmr='dot filesystem trash restore'
+
 # Use $XINITRC variable if file exists
 [ -f "$XINITRC" ] && alias startx="startx $XINITRC"
