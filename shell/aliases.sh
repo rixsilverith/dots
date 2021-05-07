@@ -55,10 +55,8 @@ alias reloadshell="exec $SHELL -l"
 
 # Show CPU temperature
 alias cputemp='watch -n 0 "sensors | grep Core"'
-
 # Display GPU temperature using NVIDIA System Management Interface
 alias gputemp='watch -n 0 "nvidia-smi -q -d temperature"'
-
 # Display current clock speed
 alias clockspeed='watch -n 0 "lscpu | grep \"Mhz\""'
 
@@ -85,12 +83,6 @@ alias gnuke='git clean -df && git reset --hard'
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
 
-# Valgrind shortcut
-alias vgd='valgrind --leak-check=full --track-origins=yes'
-
-# Colorpanes to display terminal emulator color palette
-alias colorpanes='dot ui colorpanes'
-
 # Extract files shortcut
 alias ext='dot filesystem extract'
 
@@ -98,6 +90,11 @@ alias ext='dot filesystem extract'
 alias rm='dot filesystem trash'
 alias rmi='dot filesystem trash info'
 alias rmr='dot filesystem trash restore'
+
+# Miscelanea
+alias vgd='valgrind --leak-check=full --track-origins=yes'
+alias ping='prettyping'
+alias colorpanes='dot ui colorpanes'
 
 # Use $XINITRC variable if file exists
 [ -f "$XINITRC" ] && alias startx="startx $XINITRC"
