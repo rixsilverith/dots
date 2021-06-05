@@ -1,0 +1,70 @@
+#!/usr/bin/zsh
+
+DARKIN_PROMPT_ADD_NEWLINE="${DARKIN_PROMPT_ADD_NEWLINE=false}"
+DARKIN_PROMPT_SHORT_PWD="${DARKIN_PROMPT_SHORT_PWD=false}"
+DARKIN_PROMPT_DIR_PREFIX="${DARKIN_PROMPT_DIR_PREFIX="in "}"
+DARKIN_PROMPT_SHOW_USER="${DARKIN_PROMPT_SHOW_USER=false}"
+
+GIT_BRANCH_SYMBOL=" "
+
+darkin_user() {
+    local user=""
+    [[ $DARKIN_PROMPT_SHOW_USER == true ]] && user="$(whoami) "
+    echo $user
+}
+
+_darkin_pwd() {
+    if [[ $(pwd) == "$HOME" ]]; then
+        echo "~"
+    else
+        # Hmm... yeah WTF. Stolen with <3 from https://github.com/CodelyTV/dotly/blob/master/scripts/core/short_pwd
+        echo ${${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}/\/\//\/}
+    fi
+}
+
+darkin_dir() {
+    local -r cwd=$(pwd)
+    local dir="$cwd"
+
+    if [[ $DARKIN_PROMPT_SHORT_PWD == false ]]; then
+        dir=$(_darkin_pwd)
+    else
+        [[ $dir == $HOME ]] && dir="~"
+        dir=${dir##*/}
+    fi
+
+    dir="$DARKIN_PROMPT_DIR_PREFIX$dir"
+    echo $dir
+}
+
+darkin_git() {
+    local -r git_current_branch="$vcs_info_msg_0_"
+    [[ -z "$git_current_branch" ]] && return
+    echo " on $GIT_BRANCH_SYMBOL$git_current_branch"
+}
+
+darkin_prompt() {
+    prompt_darkin="$(darkin_user)$(darkin_dir)$(darkin_git)"
+    echo "$prompt_darkin "
+}
+
+prompt_darkin_setup() {
+    autoload -Uz vcs_info
+    autoload -Uz add-zsh-hook
+
+    # This variable is a magic variable used when loading themes with zsh's prompt
+    # function. It will ensure the proper prompt options are set.
+    prompt_opts=(cr percent sp subst)
+
+    # Fetch Git info when entering a command.
+    add-zsh-hook precmd vcs_info
+
+    PROMPT='$(darkin_prompt)'
+    PS1='$(darkin_prompt)'
+
+    [[ $DARKIN_PROMPT_ADD_NEWLINE == true ]] && PS1="$PS1"$'\n> '
+
+    unset RPS1
+}
+
+prompt_darkin_setup "$@"

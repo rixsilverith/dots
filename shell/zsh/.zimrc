@@ -10,11 +10,8 @@ zmodule zimfw/history
 zmodule zimfw/input
 # Utility aliases and functions. Add colour to ls, grep and less
 zmodule zimfw/utility
-
 # Exposes git repository status information to prompts
 zmodule git-info
-# A fork of the Powerline-inspired agnoster prompt theme
-zmodule zimfw/eriner
 
 # Fish-like autosuggestions for Zsh
 zmodule zsh-users/zsh-autosuggestions

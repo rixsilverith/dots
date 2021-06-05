@@ -6,14 +6,9 @@ setopt autocd
 # Extended globbing
 setopt extendedglob
 
-# Get Zim to work
-source "$ZIM_HOME/init.zsh"
-
-# Load shared shell aliases and environment variables
-source "$DOTS_HOME/shell/init.sh"
-
-# Load Z
-source "$DOTS_HOME/modules/z/z.sh"
+source "$ZIM_HOME/init.zsh"        # Get Zim to work
+source "$DOTS_HOME/shell/init.sh"  # Load shared shell aliases, exports and functions
+source "$DOTS_HOME/modules/z/z.sh" # Load Z
 
 # Async mode for autocompletion
 ZSH_AUTOSUGGEST_USE_ASYNC=true
@@ -23,6 +18,11 @@ ZSH_HIGHLIGHT_MAXLENGTH=300
 HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 HISTSIZE=1000
 SAVEHIST=1000
+
+fpath=("$DOTS_HOME/shell/zsh/themes" $fpath)
+
+autoload -Uz promptinit && promptinit
+prompt ${DOTS_THEME:-darkin}
 
 dot-widget() {
   source "$DOTS_HOME/scripts/core/dot.sh"
