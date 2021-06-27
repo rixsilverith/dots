@@ -1,0 +1,14 @@
+$DOTS_HOME/wm/alacritty, $XDG_CONFIG_HOME/alacritty
+$DOTS_HOME/wm/bspwm, $XDG_CONFIG_HOME/bspwm
+$DOTS_HOME/wm/dunst, $XDG_CONFIG_HOME/dunst
+$DOTS_HOME/misc/fontconfig, $XDG_CONFIG_HOME/fontconfig
+$DOTS_HOME/git, $XDG_CONFIG_HOME/git
+$DOTS_HOME/editors/neovim, $XDG_CONFIG_HOME/nvim
+$DOTS_HOME/util/redshift, $XDG_CONFIG_HOME/redshift
+$DOTS_HOME/wm/qtile, $XDG_CONFIG_HOME/qtile
+$DOTS_HOME/util/zathura, $XDG_CONFIG_HOME/zathura
+$DOTS_HOME/misc/mimeapps.list, $XDG_CONFIG_HOME/mimeapps.list
+$DOTS_HOME/shell/bash/.bashrc, $HOME/.bashrc
+$DOTS_HOME/shell/bash/.bash_profile, $HOME/.bash_profile
+$DOTS_HOME/misc/themes, $XDG_DATA_HOME/themes
+$DOTS_HOME/misc/icons, $XDG_DATA_HOME/icons

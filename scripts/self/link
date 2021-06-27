@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Symlink dotfiles and configurations
+##?
+##? Usage: dot self link
+docs::parse "$@"
+
+while IFS=", " read -r dotfolder origin; do
+  [[ -d "$origin" && ! -L "$origin" ]] && rm -rf "$origin"
+  [[ -L "$origin" && "$(readlink "$origin")" == "$dotfolder" ]] && continue
+
+  ln -sf "$dotfolder" "$origin"
+  [[ $? -ne 0 ]] && echo -e "\033[1;31mError\033[0m creating symlink \033[1;36m$origin --> $dotfolder\033[0m"
+done < <(envsubst < "$DOTS_HOME/misc/symlinks.csv")
+
+# By default, "read" does not expand variables. That "envsubst" thing
+# makes it so variables read from the file are expanded.
+# See: https://askubuntu.com/questions/974257/read-string-with-user-variable-as-text-and-resolve-it
