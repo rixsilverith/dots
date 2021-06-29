@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
 
 DARKIN_PROMPT_ADD_NEWLINE="${DARKIN_PROMPT_ADD_NEWLINE=false}"
-DARKIN_PROMPT_SHORT_PWD="${DARKIN_PROMPT_SHORT_PWD=false}"
+DARKIN_PROMPT_SHORT_PWD="${DARKIN_PROMPT_SHORT_PWD=true}"
 DARKIN_PROMPT_DIR_PREFIX="${DARKIN_PROMPT_DIR_PREFIX="in "}"
 DARKIN_PROMPT_SHOW_USER="${DARKIN_PROMPT_SHOW_USER=false}"
 DARKIN_PROMPT_SHOW_GIT_REPO_STATUS="${DARKIN_PROMPT_SHOW_GIT_REPO_STATUS=true}"
@@ -23,28 +23,17 @@ darkin_user() {
     echo $user
 }
 
-_darkin_pwd() {
-    if [[ $(pwd) == "$HOME" ]]; then
-        echo "~"
-    else
-        # Hmm... yeah WTF. Stolen with <3 from https://github.com/CodelyTV/dotly/blob/master/scripts/core/short_pwd
-        echo ${${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}/\/\//\/}
-    fi
-}
-
 darkin_dir() {
-    local -r cwd=$(pwd)
-    local dir="$cwd"
+    local dir="$(pwd)"
+    local dir_segment="${dir/$HOME/~}"
 
-    if [[ $DARKIN_PROMPT_SHORT_PWD == false ]]; then
-        dir=$(_darkin_pwd)
-    else
-        [[ $dir == $HOME ]] && dir="~"
-        dir=${dir##*/}
+    if [[ $DARKIN_PROMPT_SHORT_PWD == true && $dir != $HOME ]]; then
+        # Hmm... yeah WTF. Stolen with <3 from https://github.com/CodelyTV/dotly/blob/master/scripts/core/short_pwd
+        dir=$(echo ${${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}/\/\//\/})
+        dir_segment="$dir"
     fi
 
-    dir="$DARKIN_PROMPT_DIR_PREFIX$dir"
-    echo $dir
+    echo "$DARKIN_PROMPT_DIR_PREFIX$dir_segment"
 }
 
 darkin_git() {
