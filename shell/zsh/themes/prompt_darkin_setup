@@ -4,8 +4,18 @@ DARKIN_PROMPT_ADD_NEWLINE="${DARKIN_PROMPT_ADD_NEWLINE=false}"
 DARKIN_PROMPT_SHORT_PWD="${DARKIN_PROMPT_SHORT_PWD=false}"
 DARKIN_PROMPT_DIR_PREFIX="${DARKIN_PROMPT_DIR_PREFIX="in "}"
 DARKIN_PROMPT_SHOW_USER="${DARKIN_PROMPT_SHOW_USER=false}"
+DARKIN_PROMPT_SHOW_GIT_REPO_STATUS="${DARKIN_PROMPT_SHOW_GIT_REPO_STATUS=true}"
+DARKIN_PROMPT_MINIMAL_GIT_REPO_STATUS="${DARKIN_PROMPT_MINIMAL_GIT_REPO_STATUS=true}"
 
 GIT_BRANCH_SYMBOL=" "
+
+if [[ $DARKIN_PROMPT_MINIMAL_GIT_REPO_STATUS == true ]]; then
+    GIT_CLEAN_STATUS_SYMBOL=""
+    GIT_DIRTY_STATUS_SYMBOL="*"
+else
+    GIT_CLEAN_STATUS_SYMBOL=" ✓"
+    GIT_DIRTY_STATUS_SYMBOL=" ✗"
+fi
 
 darkin_user() {
     local user=""
@@ -38,13 +48,21 @@ darkin_dir() {
 }
 
 darkin_git() {
-    local -r git_current_branch="$vcs_info_msg_0_"
-    [[ -z "$git_current_branch" ]] && return
-    echo " on $GIT_BRANCH_SYMBOL$git_current_branch"
+    [[ $(git rev-parse --is-inside-work-tree &> /dev/null; echo "$?") != '0' ]] && return
+    local -r git_current_branch="$(git symbolic-ref -q --short HEAD)"
+    local git_segment=" on $GIT_BRANCH_SYMBOL$git_current_branch"
+
+    if [[ $DARKIN_PROMPT_SHOW_GIT_REPO_STATUS == true ]]; then
+        git_repo_status=$(git diff --quiet --ignore-submodules HEAD &> /dev/null; echo "$?")
+        [[ $git_repo_status == '1' ]] && git_repo_status="$GIT_DIRTY_STATUS_SYMBOL" || git_repo_status="$GIT_CLEAN_STATUS_SYMBOL"
+        git_segment="$git_segment$git_repo_status"
+    fi
+
+    echo $git_segment
 }
 
 darkin_prompt() {
-    prompt_darkin="$(darkin_user)$(darkin_dir)$(darkin_git)"
+    prompt_darkin="$(tput bold)$(darkin_user)$(darkin_dir)$(darkin_git)$(tput sgr0)"
     echo "$prompt_darkin "
 }
 
