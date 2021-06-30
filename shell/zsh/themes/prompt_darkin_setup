@@ -12,10 +12,18 @@ GIT_BRANCH_SYMBOL=" "
 if [[ $DARKIN_PROMPT_MINIMAL_GIT_REPO_STATUS == true ]]; then
     GIT_CLEAN_STATUS_SYMBOL=""
     GIT_DIRTY_STATUS_SYMBOL="*"
+    GIT_BEHIND_STATUS_SYMBOL="  "
+    GIT_AHEAD_STATUS_SYMBOL="  "
+    GIT_DIVERGED_STATUS_SYMBOL="  "
 else
     GIT_CLEAN_STATUS_SYMBOL=" ✓"
     GIT_DIRTY_STATUS_SYMBOL=" ✗"
+    GIT_BEHIND_STATUS_SYMBOL="  "
+    GIT_AHEAD_STATUS_SYMBOL="  "
+    GIT_DIVERGED_STATUS_SYMBOL="  "
 fi
+
+GIT_SYNCED_STATUS_SYMBOL=""
 
 darkin_user() {
     local user=""
@@ -44,6 +52,20 @@ darkin_git() {
     if [[ $DARKIN_PROMPT_SHOW_GIT_REPO_STATUS == true ]]; then
         git_repo_status=$(git diff --quiet --ignore-submodules HEAD &> /dev/null; echo "$?")
         [[ $git_repo_status == '1' ]] && git_repo_status="$GIT_DIRTY_STATUS_SYMBOL" || git_repo_status="$GIT_CLEAN_STATUS_SYMBOL"
+
+        # Ensure the Git repo is not empty and that it has an upstream branch to avoid reference errors
+        if [[ $(git log &> /dev/null; echo "$?") == '0' && $(git rev-parse --symbolic-full-name ${git_current_branch}@{u} &> /dev/null; echo "$?") == '0' ]]; then
+            local -r upstream='@{u}'
+            local -r loc=$(git rev-parse @)
+            local -r remote=$(git rev-parse "$upstream")
+            local -r base=$(git merge-base @ "$upstream")
+
+            if [[ "$loc" == "$remote" ]]; then git_repo_status="$git_repo_status$GIT_SYNCED_STATUS_SYMBOL";
+            elif [[ "$loc" == "$base" ]]; then git_repo_status="$git_repo_status$GIT_BEHIND_STATUS_SYMBOL";
+            elif [[ "$remote" == "$base" ]]; then git_repo_status="$git_repo_status$GIT_AHEAD_STATUS_SYMBOL";
+            else git_repo_status="$git_repo_status$GIT_DIVERGED_STATUS_SYMBOL"; fi
+        fi
+
         git_segment="$git_segment$git_repo_status"
     fi
 
