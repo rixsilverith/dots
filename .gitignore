@@ -13,4 +13,4 @@ bin/compiled/
 misc/walls/.wall.jpg
 
 # Night mode file
-util/redshift/.night-mode
+util/redshift/.night-shift-enabled
