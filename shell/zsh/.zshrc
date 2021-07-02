@@ -26,32 +26,27 @@ prompt ${DOTS_THEME:-darkin}
 
 dot-widget() {
   source "$DOTS_HOME/scripts/core/dot.sh"
+  # Prevent the terminal from killing itself when `Esc` is pressed while
+  # running this widget
+  set +e
 
-  local paths="$(dot::list_scripts)"
-
+  local -r paths="$(dot::list_scripts)"
   script="$(
     echo "$paths" |
       xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
-      fzf \
-        --layout reverse-list \
-        --height 10% \
-        --min-height 1 \
-        --cycle \
-        --pointer '➜' \
+      fzf --layout reverse-list --height 20% --min-height 1 --cycle --pointer '➜' \
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
         --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
   )"
 
-  local ret=$?
-
-  script="dot $script"
-  RBUFFER=${script}${RBUFFER}
+  if [[ -n $script ]]; then
+    script="dot $script"
+    RBUFFER="${script} ${RBUFFER}"
+  fi
 
   zle redisplay
   typeset -f zle-line-init >/dev/null && zle zle-line-init
   zle vi-end-of-line
-
-  return $ret
 }
 
 zle -N dot-widget
