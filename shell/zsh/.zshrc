@@ -24,6 +24,10 @@ fpath=("$DOTS_HOME/shell/zsh/themes" $fpath)
 autoload -Uz promptinit && promptinit
 prompt ${DOTS_THEME:-darkin}
 
+fre_chpwd() { fre --add "$(pwd)"; }
+typeset -gaU chpwd_functions
+chpwd_functions+=fre_chpwd
+
 dot-widget() {
   source "$DOTS_HOME/scripts/core/dot.sh"
   # Prevent the terminal from killing itself when `Esc` is pressed while
