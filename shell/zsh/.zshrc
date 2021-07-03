@@ -51,3 +51,12 @@ dot-widget() {
 
 zle -N dot-widget
 bindkey '^f' dot-widget
+
+if [[ "${DOTS_BENCHMARK_PROMPT_THEME:-false}" == "true" ]]; then
+  typeset -F SECONDS start
+
+  precmd() { start=$SECONDS; }
+  bmark() { PREDISPLAY="[Prompt theme elapsed time: $(( $SECONDS - $start )) s] "; }
+
+  zle -N zle-line-init bmark
+fi
