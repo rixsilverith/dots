@@ -56,6 +56,18 @@ dot-widget() {
 zle -N dot-widget
 bindkey '^f' dot-widget
 
+up-directory() {
+  builtin cd ..
+  if (( $? == 0 )); then
+    local precmd
+    for precmd in $precmd_functions; do $precmd; done
+    zle reset-prompt
+  fi
+}
+
+zle -N up-directory
+bindkey '^u' up-directory
+
 if [[ "${DOTS_BENCHMARK_PROMPT_THEME:-false}" == "true" ]]; then
   typeset -F SECONDS start
 
