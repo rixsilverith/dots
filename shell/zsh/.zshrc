@@ -56,6 +56,13 @@ dot-widget() {
 zle -N dot-widget
 bindkey '^f' dot-widget
 
+zle-line-init() {
+  zle -K viins
+  echo -ne '\033[0 q' # Use `beam` cursor style
+}
+
+zle -N zle-line-init
+
 up-directory() {
   builtin cd ..
   if (( $? == 0 )); then
