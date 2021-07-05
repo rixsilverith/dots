@@ -6,6 +6,9 @@ DARKIN_PROMPT_DIR_PREFIX="${DARKIN_PROMPT_DIR_PREFIX="in "}"
 DARKIN_PROMPT_SHOW_USER="${DARKIN_PROMPT_SHOW_USER=false}"
 DARKIN_PROMPT_SHOW_GIT_REPO_STATUS="${DARKIN_PROMPT_SHOW_GIT_REPO_STATUS=true}"
 DARKIN_BUFFER_EMPTY="${DARKIN_BUFFER_EMPTY=false}"
+DARKIN_SHOW_PROMPT_SYMBOL="${DARKIN_SHOW_PROMPT_SYMBOL=true}"
+
+DARKIN_PROMPT_SYMBOL="${DARKIN_PROMPT_SYMBOL="  "}"
 
 DARKIN_GIT_BRANCH_SYMBOL=" "
 DARKIN_GIT_CLEAN_STATUS_SYMBOL=""
@@ -14,6 +17,15 @@ DARKIN_GIT_SYNCED_STATUS_SYMBOL=""
 DARKIN_GIT_BEHIND_STATUS_SYMBOL="  "
 DARKIN_GIT_AHEAD_STATUS_SYMBOL="  "
 DARKIN_GIT_DIVERGED_STATUS_SYMBOL="  "
+
+DARKIN_LAST_STATUS='0'
+
+darkin::symbol() {
+  [[ $DARKIN_SHOW_PROMPT_SYMBOL == false ]] && return
+  [[ $DARKIN_LAST_STATUS == '0' ]] && darkin_symbol="$DARKIN_PROMPT_SYMBOL" || darkin_symbol="%F{red}$DARKIN_PROMPT_SYMBOL%f%B"
+
+  echo $darkin_symbol
+}
 
 darkin::user() {
   [[ $DARKIN_PROMPT_SHOW_USER == false ]] && return
@@ -68,7 +80,8 @@ darkin::git() {
 }
 
 darkin::prompt() {
-  DARKIN_PROMPT="%B$(darkin::user)$(darkin::dir)$(darkin::git)%b "
+  DARKIN_LAST_STATUS="$status"
+  DARKIN_PROMPT="%B$(darkin::symbol)$(darkin::user)$(darkin::dir)$(darkin::git)%b "
   PROMPT="$DARKIN_PROMPT"
 
   [[ $DARKIN_PROMPT_ADD_NEWLINE == true ]] && PROMPT="$PROMPT"$'\n> '
