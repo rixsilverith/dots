@@ -38,7 +38,8 @@ dot-widget() {
   script="$(
     echo "$paths" |
       xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
-      fzf --layout reverse-list --height 20% --min-height 1 --cycle --pointer '➜' \
+      fzf --layout reverse-list --height 9 --cycle --pointer '➜' \
+        --preview-window='right,65%,border-sharp' \
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
         --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
   )"
@@ -48,8 +49,7 @@ dot-widget() {
     RBUFFER="${script} ${RBUFFER}"
   fi
 
-  zle redisplay
-  typeset -f zle-line-init >/dev/null && zle zle-line-init
+  zle reset-prompt
   zle vi-end-of-line
 }
 
