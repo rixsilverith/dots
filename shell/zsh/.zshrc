@@ -75,6 +75,15 @@ up-directory() {
 zle -N up-directory
 bindkey '^u' up-directory
 
+# Other key bindings
+autoload -Uz edit-command-line && zle -N edit-command-line
+bindkey '^K' edit-command-line
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+bindkey '^H' backward-kill-word
+bindkey '^l' clear-screen
+bindkey '^D' backward-kill-line
+
 if [[ "${DOTS_BENCHMARK_PROMPT_THEME:-false}" == "true" ]]; then
   typeset -F SECONDS start
 
