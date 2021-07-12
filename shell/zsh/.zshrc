@@ -1,89 +1,32 @@
-# Remove older command from the history if a duplicate is to be added
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FCNTL_LOCK
-# Change directory by typing only its name
-setopt autocd
-# Extended globbing
-setopt extendedglob
+#!/usr/bin/zsh
 
-source "$ZIM_HOME/init.zsh"        # Get Zim to work
-source "$DOTS_HOME/shell/init.sh"  # Load shared shell aliases, exports and functions
-source "$DOTS_HOME/modules/z/z.sh" # Load Z
+# General zsh configs
+setopt autocd           # Enable cd into a directory by typing its name
+setopt extendedglob     # Extended globbing
+
+source "$DOTS_HOME/shell/init.sh"   # Load shared shell aliases, exports and functions
+source "$DOTS_HOME/modules/z/z.sh"  # Initialize Z
+source "$ZIM_HOME/init.zsh"         # Initialize zim
+
+source "${ZDOTDIR:-$DOTS_HOME/shell/zsh}/history.zsh"  # Load zsh history config
+source "${ZDOTDIR:-$DOTS_HOME/shell/zsh}/keybinds.zsh"  # Load zsh key bindings
+
+fpath=("$DOTS_HOME/shell/zsh/themes" $fpath)  # Set path for themes
+
+# Initialize prompt theme
+autoload -Uz promptinit && promptinit
+prompt ${DOTS_THEME:-darkin}
+
+# Log a visit to a directory in fre database
+fre_chpwd() { fre --add "$(pwd)"; }
+typeset -gaU chpwd_functions
+chpwd_functions+=fre_chpwd
 
 # Async mode for autocompletion
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_HIGHLIGHT_MAXLENGTH=300
 
-# History files
-HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
-HISTSIZE=1000
-SAVEHIST=1000
-
-fpath=("$DOTS_HOME/shell/zsh/themes" $fpath)
-
-autoload -Uz promptinit && promptinit
-prompt ${DOTS_THEME:-darkin}
-
-fre_chpwd() { fre --add "$(pwd)"; }
-typeset -gaU chpwd_functions
-chpwd_functions+=fre_chpwd
-
-dot-widget() {
-  source "$DOTS_HOME/scripts/core/dot.sh"
-  # Prevent the terminal from killing itself when `Esc` is pressed while
-  # running this widget
-  set +e
-
-  local -r paths="$(dot::list_scripts)"
-  script="$(
-    echo "$paths" |
-      xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
-      fzf --layout reverse-list --height 9 --cycle --pointer '➜' \
-        --preview-window='right,65%,border-sharp' \
-        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
-        --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
-  )"
-
-  if [[ -n $script ]]; then
-    script="dot $script"
-    RBUFFER="${script} ${RBUFFER}"
-  fi
-
-  zle reset-prompt
-  zle vi-end-of-line
-}
-
-zle -N dot-widget
-bindkey '^f' dot-widget
-
-zle-line-init() {
-  zle -K viins
-  echo -ne '\033[0 q' # Use `beam` cursor style
-}
-
-zle -N zle-line-init
-
-up-directory() {
-  builtin cd ..
-  if (( $? == 0 )); then
-    local precmd
-    for precmd in $precmd_functions; do $precmd; done
-    zle reset-prompt
-  fi
-}
-
-zle -N up-directory
-bindkey '^u' up-directory
-
-# Other key bindings
-autoload -Uz edit-command-line && zle -N edit-command-line
-bindkey '^K' edit-command-line
-bindkey '^A' beginning-of-line
-bindkey '^E' end-of-line
-bindkey '^H' backward-kill-word
-bindkey '^l' clear-screen
-bindkey '^D' backward-kill-line
-
+# Prompt theme rendering benchmark
 if [[ "${DOTS_BENCHMARK_PROMPT_THEME:-false}" == "true" ]]; then
   typeset -F SECONDS start
 
