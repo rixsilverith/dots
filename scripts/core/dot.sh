@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 if ! ${DOT_MAIN_SOURCED:-false}; then
-  for file in $DOTS_HOME/scripts/core/{args,docs,log}.sh; do
+  for file in $DOTS_HOME/scripts/core/{args,docs,log,script}.sh; do
     source "$file";
   done;
   unset file;
