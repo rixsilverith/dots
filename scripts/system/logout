@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Shows a dmenu prompt to shutdown, reboot or suspend the system
+##?
+##? Usage: dot (system|sys) logout
+##?
+##?    Should be binded to the `alt + f4` key combination by
+##?    default.
+##?
+docs::parse "$@"
+script::depends_on dmenu
+
+uptime="$(uptime -p | cut -c 4-)"
+declare -a options=("Suspend" "Reboot" "Shutdown")
+action=$(printf '%s\n' "${options[@]}" | dmenu -p "Uptime $uptime ")
+[[ -n $action ]] && [[ "$(echo -e "No\nYes" | dmenu -p "${action}?")" == "No" ]] && exit 0
+
+case $action in
+  "Suspend")  systemctl suspend ;;
+  "Reboot")   systemctl reboot ;;
+  "Shutdown") systemctl poweroff ;;
+  *) exit 0 ;;
+esac
