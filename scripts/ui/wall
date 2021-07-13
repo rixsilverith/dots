@@ -2,28 +2,37 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Change wallpaper given its name
+##? Change the desktop wall
 ##?
-##? Usage: dot ui wall <name>
+##? Usage: dot ui wall [name]
+##?
+##?    If [name] is not provided, a list with the available walls will be
+##?    displayed for one to be selected.
+##?
 docs::parse "$@"
+script::depends_on feh fd dmenu
 
 walls_dir="$DOTS_HOME/misc/walls"
 
 list_walls() {
   local -r walls=($(fd . $walls_dir --extension jpg))
+  declare -a available_walls=()
+
   for wall in ${walls[@]}; do
     name=${wall%.jpg}
     name=${name##*/}
-    echo $name
+    available_walls+=(${name^})
   done
-  exit 0
+
+  wall_name=$(printf '%s\n' "${available_walls[@]}" | dmenu -p "Select a wall")
+  set_wall ${wall_name,,} && exit 0
 }
 
 set_wall() {
   cp $walls_dir/${1}.jpg $walls_dir/.wall.jpg
   feh --bg-scale --no-fehbg $walls_dir/.wall.jpg
 
-  notify-send "Background" "Background changed to <b>${1}</b>!"
+  notify-send "Background changed" "Background changed to <b>${1}</b>!"
 }
 
 [[ $# -eq 0 ]] && list_walls
