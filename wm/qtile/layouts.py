@@ -6,7 +6,7 @@ layout_config = {
     'margin': 16
 }
 
-layouts = [ layout.MonadTall(**layout_config) ]
+layouts = [ layout.Bsp(**layout_config) ]
 
 floating_layout = layout.Floating(
     float_rules = [
