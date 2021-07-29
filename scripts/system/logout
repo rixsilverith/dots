@@ -6,12 +6,12 @@ source "$DOTS_HOME/scripts/core/dot.sh"
 ##? Usage: dot (system|sys) logout
 ##?
 ##?    Should be binded to the `alt + f4` key combination by
-##?    default.
+##?    default. Also shows current uptime.
 ##?
 docs::parse "$@"
 script::depends_on dmenu
 
-uptime="$(uptime -p | cut -c 4-)"
+uptime="$(uptime -p | sed -e 's/up //g' -e 's/ days/d/g' -e 's/ day/d/g' -e 's/ hours/h/g' -e 's/ hour/h/g' -e 's/ minutes/m/g' -e 's/, / /g')"
 declare -a options=("Suspend" "Reboot" "Shutdown")
 action=$(printf '%s\n' "${options[@]}" | dmenu -p "Uptime $uptime ")
 [[ -n $action ]] && [[ "$(echo -e "No\nYes" | dmenu -p "${action}?")" == "No" ]] && exit 0
