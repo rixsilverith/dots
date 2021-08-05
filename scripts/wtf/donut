@@ -5,17 +5,21 @@ source "$DOTS_HOME/scripts/core/dot.sh"
 ##? Displays a rotating donut (yeah, really)
 ##?
 ##? Usage: dot wtf donut
+##?
+##?    Look, the code is also donut-shaped.
+##?
 docs::parse "$@"
+script::depends_on gcc
 
 cdonut="$DOTS_HOME/bin/compiled/cdonut"
 cdonut_src="$DOTS_HOME/scripts/wtf/donut.c"
 cdonut_obj=${cdonut_src%.c}.o
 
-if [[ ! -f $cdonut ]]; then
-  gcc -c $cdonut_src -o $cdonut_obj 2>&1
-  echo $cdonut_obj
-  gcc -o $cdonut $cdonut_obj 2>&1
-  rm -f $cdonut_obj 2>&1
+if [[ ! -f "$cdonut" ]]; then
+  gcc -c "$cdonut_src" -o "$cdonut_obj" 2>&1
+  echo "$cdonut_obj"
+  gcc -o "$cdonut" "$cdonut_obj" 2>&1
+  rm -f "$cdonut_obj" 2>&1
 fi
 
-$cdonut
+"$cdonut"

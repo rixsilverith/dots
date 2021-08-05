@@ -1,11 +1,14 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/bash
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Symlink dotfiles and configurations
+##? Symlinks dotfiles and configurations
 ##?
 ##? Usage: dot self link
+##?
+##?    Note to self: This script may overwrite some files, so just... be
+##?    careful... I guess. Used by `dot self install`.
+##?
 docs::parse "$@"
 
 while IFS=", " read -r dotfolder origin; do

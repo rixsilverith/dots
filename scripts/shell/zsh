@@ -2,28 +2,34 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Zsh stuff to optimize and benchmark
+##? Zsh helpers and utilities
 ##?
 ##? Usage: dot (shell|sh) zsh (benchmark|optimize)
+##?
+##?    Some helper functions to benchmark and optimize Zsh.
+##?
 docs::parse "$@"
+script::depends_on hyperfine
 
-benchmark() {
+zsh::benchmark() {
   hyperfine '/bin/zsh -i -c exit' '/usr/bin/zsh -i -c exit' --warmup 1
   echo -e "Currently using $(tput setaf 3)$(command -v zsh)$(tput sgr0) - $(/bin/zsh --version)\n"
 }
 
-optimize() {
+zsh::optimize() {
   find "$DOTS_HOME/shell/zsh" -name '*.zwc' -exec rm -rf {} \;
   find "$DOTS_HOME/shell/zsh" -name '*.old' -exec rm -rf {} \;
   find "$DOTS_HOME/modules/zimfw" -name '*.zwc' -exec rm -rf {} \;
   find "$DOTS_HOME/modules/zimfw" -name '*.old' -exec rm -rf {} \;
+
+  zsh -c "source ${ZDOTDIR:-${DOTS_HOME}/shell/zsh}/.zlogin"
 }
 
-cmd="$1"
-shift
+[[ $# -eq 0 ]] && dot shell zsh -h && exit 0
 
-case $cmd in
-  "benchmark") benchmark ;;
-  "optimize") optimize ;;
-  *) "$DOTS_HOME/scripts/shell/zsh" -h ;;
+cmd=$1
+case "$cmd" in
+  "benchmark") zsh::benchmark ;;
+  "optimize") zsh::optimize ;;
+  *) dot shell zsh -h ;;
 esac

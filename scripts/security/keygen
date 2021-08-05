@@ -2,19 +2,23 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Generates a cryptographically secure password
+##? Generates a cryptographically secure password n chars long
 ##?
-##? Usage: dot (security | sec) keygen
+##? Usage: dot (security|sec) keygen [n]
+##?
+##?    The generated password contains both alphanumeric characters and
+##?    and symbols, and it is automatically copied to the clipboard.
+##?
 docs::parse "$@"
+script::depends_on xclip
 
-num_chars=30
+num_chars=${1:-30}
 
 # Taken from https://en.m.wikipedia.org/wiki/Random_password_generator
 mkpw() {
   LC_ALL=C
-  tr -dc '[:graph:]' < /dev/urandom | head -c ${1:-$num_chars}; echo
+  tr -dc '[:graph:]' < /dev/urandom | head -c $num_chars; echo
 }
 
-echo $(mkpw) | xclip -selection clipboard
-
-log::info "Password copied to the clipboard!"
+echo -n "$(mkpw)" | xclip -selection clipboard
+notify-send -i "$DOTS_HOME/wm/dunst/icons/key.png" "Key generator" "Password copied to the clipboard!"

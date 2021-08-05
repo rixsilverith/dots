@@ -2,9 +2,12 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Bash cat with cat
+##? Shows a cute cat when using the cat command
 ##?
-##? Usage: dot (system | sys) cat <file>
+##? Usage: dot (system|sys) cat <file>
+##?
+##?    Don't try to pat the cat, really.
+##?
 docs::parse "$@"
 
 # See https://github.com/GuidoFe/bash-cat-with-cat

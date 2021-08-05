@@ -2,18 +2,23 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Optimize an image preserving the original
+##? Optimizes (compresses) an image preserving the original
 ##?
-##? Usage: dot (image | img) optimize <file>
+##? Usage: dot (image|img) optimize <image>
+##?
+##?    <image> must be in jpeg format.
+##?
 docs::parse "$@"
+script::depends_on jpegoptim
 
+[[ $# -eq 0 ]] && dot image optimize -h && exit 0
 filename=$1
 
-[ -f $filename ] || log::abort "$filename is not a valid file!"
+[ -f "$filename" ] || log::abort "$filename is not a file :v"
 
 orig_file=$(echo "$filename" | sed 's/\(.*\)\./\1.original./')
 
-cp $filename $orig_file
-jpegoptim --max 85 -q $filename
+cp "$filename" "$orig_file"
+jpegoptim --max 85 -q "$filename"
 
-log::success "File <$filename> optimized!"
+log::success "Image $filename optimized!"

@@ -1,23 +1,39 @@
 #!/usr/bin/bash
-set -euo pipefail
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
 ##? Cleans useless files such as cache, empties trash, etc.
 ##?
-##? Usage: dot (system | sys) clean
+##? Usage: dot (system|sys) clean
+##?
+##?    Requires root priviledge in order to perform a full clean up.
+##?
 docs::parse "$@"
 
-if ! has gio; then
-  i=$(feedback::confirmation "This script uses the gio command. Wanna install it?")
-  [[ i -ne 0 ]] && log::abort "Aborting..."
+set +e # Prevent the script from crashing if there is some error
 
-  log::info "Installing glib2"
-  sudo pacman -S --noconfirm glib2
+# `dot system clean` requires root priviledges. So check if sudo is passwordless
+# and update the current sudo time stamp until the script has finished.
+grep -q "NOPASSWD:     ALL" /etc/sudoers.d/$LOGNAME > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  sudo -v
+  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
 fi
 
-gio trash --empty
+log::info "Purging directories that no longer exist from fre"
+fre --sorted | while read dir; do if [ ! -d "$dir" ]; then fre --delete "$dir"; fi; done
 
-log::info "Cleaning Zsh cache..."
-find $ZDOTDIR -name "*.zwc" -delete
+log::info "Cleaning cached versions of uninstalled packages with pacman"
+sudo paccache -ruk0 > /dev/null
+
+log::info "Removing orphan packages from the system"
+pacman -Qtdq | sudo pacman -Rns --noconfirm - &> /dev/null
+
+log::info "Removing broken symlinks"
+fd . "$HOME" -HL -t l 2> /dev/null -x rm {} \;
+
+log::info "Cleaning zsh cache"
+dot shell zsh optimize &> /dev/null
+
+log::success "Clean up done!"
 

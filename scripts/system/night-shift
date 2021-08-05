@@ -2,10 +2,15 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Use redshift to enable/disable blue screen light reduction
+##? Enables (Disables) a screen blue light filter
 ##?
-##? Usage: dot (system | sys) night-shift <on|off|toggle>
+##? Usage: dot (system|sys) night-shift (enable|disable|toggle)
+##?
+##?    Uses redshift. Should be binded to the `mod + r` key combination
+##?    by default.
+##?
 docs::parse "$@"
+script::depends_on redshift
 
 # To track whether or not the night mode is enabled, we'll create
 # the DOTS_NIGHT_SHIFT_FILE file in the redshift directory when night
@@ -17,34 +22,31 @@ docs::parse "$@"
 # mode instead of two.
 DOTS_NIGHT_SHIFT_FILE="$DOTS_HOME/util/redshift/.night-shift-enabled"
 
-temp=3700
+temp="${2:-3700}"
 
-enable_night_shift() {
-  local -r t="$1"
-  redshift -O $t
-  touch $DOTS_NIGHT_SHIFT_FILE
-  notify-send "Night shift enabled!"
+night-shift::enable() {
+  local -r temperature="$1"
+  redshift -O "$temperature"
+  touch "$DOTS_NIGHT_SHIFT_FILE"
+  notify-send -i "$DOTS_HOME/wm/dunst/icons/nightshift.png" "Night shift" "Screen temperature adjusted" -t 2500
 }
 
-disable_night_shift() {
+night-shift::disable() {
   redshift -x
-  rm -f $DOTS_NIGHT_SHIFT_FILE
-  notify-send "Night shift disabled!"
+  rm -f "$DOTS_NIGHT_SHIFT_FILE"
+  notify-send -i "$DOTS_HOME/wm/dunst/icons/nightshift.png" "Night shift" "Screen temperature reseted" -t 2500
 }
 
-toggle_night_shift() {
-  if [[ -f $DOTS_NIGHT_SHIFT_FILE ]]; then
-    disable_night_shift
-  else
-    enable_night_shift $temp
-  fi
+night-shift::toggle() {
+  if [[ -f "$DOTS_NIGHT_SHIFT_FILE" ]]; then night-shift::disable
+  else night-shift::enable $temp; fi
 }
 
-[[ $# -lt 1 ]] && log::abort "Wrong number of arguments"
+[[ $# -lt 1 ]] && dot sys night-shift -h && exit 0
 
 case "$1" in
-  "on")     enable_night_shift $temp ;;
-  "off")    disable_night_shift ;;
-  "toggle") toggle_night_shift ;;
-  *)        log::abort "Wrong arguments" ;;
+  "enable")  night-shift::enable $temp ;;
+  "disable") night-shift::disable ;;
+  "toggle")  night-shift::toggle ;;
+  *)         dot sys night-shift -h && exit 0 ;;
 esac

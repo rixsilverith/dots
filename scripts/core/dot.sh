@@ -12,12 +12,15 @@ fi
 dot::alias() {
   local -r context="$1"
   case $context in
-    fs)  echo filesystem ;;
-    img) echo image ;;
-    sec) echo security ;;
-    sh)  echo shell ;;
-    sys) echo system ;;
-    *)   echo $context ;;
+    fs)   echo filesystem ;;
+    img)  echo image ;;
+    pkg)  echo package ;;
+    proc) echo process ;;
+    net)  echo network ;;
+    sec)  echo security ;;
+    sh)   echo shell ;;
+    sys)  echo system ;;
+    *)    echo $context ;;
   esac
 }
 

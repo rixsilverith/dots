@@ -1,14 +1,15 @@
 #!/usr/bin/bash
-set -euo pipefail
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
 ##? Kills a process given its name
 ##?
-##? Usage: dot process kill <process_name>
+##? Usage: dot (process|proc) kill <process_name>
+##?
 docs::parse "$@"
 
-process_name="$1"
+[[ $# -eq 0 ]] && dot process kill -h && exit 0
+[[ -n "$1" ]] && process_name="$1"
 
 ps aux |
   grep "$process_name" |

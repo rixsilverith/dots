@@ -2,7 +2,7 @@
 
 source "$DOTS_HOME/scripts/core/dot.sh"
 
-##? Change the desktop wall
+##? Sets the desktop wall
 ##?
 ##? Usage: dot ui wall [name]
 ##?
@@ -14,31 +14,25 @@ script::depends_on feh fd dmenu
 
 walls_dir="$DOTS_HOME/misc/walls"
 
-list_walls() {
-  local -r walls=($(fd . $walls_dir --extension jpg))
-  declare -a available_walls=()
+wall::set() {
+  cp "$walls_dir/${1}.jpg" "$walls_dir/.wall.jpg"
+  feh --bg-scale --no-fehbg "$walls_dir/.wall.jpg"
+  notify-send -i "$DOTS_HOME/wm/dunst/icons/background.png" "Background changed" "Background changed to <b>${1}</b>!"
+}
+
+wall::list() {
+  local -r walls=($(fd . "$walls_dir" --extension jpg))
+  declare -a wall_list
 
   for wall in ${walls[@]}; do
     name=${wall%.jpg}
     name=${name##*/}
-    available_walls+=(${name^})
+    wall_list+=("${name^}")
   done
 
-  wall_name=$(printf '%s\n' "${available_walls[@]}" | dmenu -p "Select a wall")
-  set_wall ${wall_name,,} && exit 0
+  selected=$(printf '%s\n' "${wall_list[@]}" | dmenu -p "Choose a wall to set ")
+  wall::set "${selected,,}" && exit 0
 }
 
-set_wall() {
-  cp $walls_dir/${1}.jpg $walls_dir/.wall.jpg
-  feh --bg-scale --no-fehbg $walls_dir/.wall.jpg
-
-  notify-send "Background changed" "Background changed to <b>${1}</b>!"
-}
-
-[[ $# -eq 0 ]] && list_walls
-
-wall_name="$1"
-shift
-
-set_wall $wall_name
+[[ $# -eq 0 ]] && wall::list || wall::set "$1"
 
