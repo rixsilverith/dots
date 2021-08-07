@@ -4,17 +4,13 @@
 _bc() { bspc config "$@"; }
 _br() { bspc rule "$@"; }
 
-# Source common autostart
-source $DOTS_HOME/wm/autostart.sh
-
 # Load keybinds using Sxhkd
-pgrep -x sxhkd > /dev/null || sxhkd -c keybinds &
-
+pgrep -x sxhkd > /dev/null || sxhkd -c $DOTS_HOME/wm/bspwm/keybinds &
 # Run Polybar
-$DOTS_HOME/wm/polybar/launch.sh
+$DOTS_HOME/wm/polybar/launch.sh &
 
 # Define workspaces
-bspc monitor -d I II III IV V VI VII VIII IX X
+bspc monitor -d I II III IV V VI VII VIII
 
 # bspwm's graphical appearance
 _bc border_width         0
@@ -27,3 +23,6 @@ _bc gapless_monocle      true
 
 # Application-specific rules
 _br -a Zathura state=tiled
+_br -a firefox desktop='^2' followon=on
+_br -a discord desktop='^3' followon=on
+
