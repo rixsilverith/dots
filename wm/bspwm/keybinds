@@ -1,10 +1,30 @@
+#
+# application specific keybinds
+#
+
 # terminal emulator
 super + Return
     alacritty
 
+# application launcher
+super + m
+    dmenu_run -n
+
+# toggle night shift
+super + r
+    dot system night-shift toggle
+
+# logout menu
+alt + F4
+    dot system logout
+
 # reload sxhkd config
 super + Escape
-    pkill -USR1 -x sxhkd
+    pkill -USR1 -x sxhkd && notify-send -u normal -i /home/rix/.dots/wm/dunst/icons/keyboard.png "Sxhkd" "Configuration reloaded"
+
+#
+# multimedia keys
+#
 
 # increase/decrease volume
 XF86Audio{Raise,Lower}Volume
