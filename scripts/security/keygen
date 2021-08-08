@@ -21,4 +21,4 @@ mkpw() {
 }
 
 echo -n "$(mkpw)" | xclip -selection clipboard
-notify-send -i "$DOTS_HOME/wm/dunst/icons/key.png" "Key generator" "Password copied to the clipboard!"
+notify-send -i "$DOTS_HOME/wm/dunst/icons/key.svg" "Key generator" "Password copied to the clipboard!"

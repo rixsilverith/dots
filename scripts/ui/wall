@@ -17,7 +17,7 @@ walls_dir="$DOTS_HOME/misc/walls"
 wall::set() {
   cp "$walls_dir/${1}.jpg" "$walls_dir/.wall.jpg"
   feh --bg-scale --no-fehbg "$walls_dir/.wall.jpg"
-  notify-send -i "$DOTS_HOME/wm/dunst/icons/background.png" "Background changed" "Background changed to <b>${1}</b>!"
+  notify-send -i "$DOTS_HOME/wm/dunst/icons/background.svg" "Background changed" "Background changed to <b>${1}</b>!"
 }
 
 wall::list() {

@@ -28,13 +28,13 @@ night-shift::enable() {
   local -r temperature="$1"
   redshift -O "$temperature"
   touch "$DOTS_NIGHT_SHIFT_FILE"
-  notify-send -i "$DOTS_HOME/wm/dunst/icons/nightshift.png" "Night shift" "Screen temperature adjusted" -t 2500
+  notify-send -i "$DOTS_HOME/wm/dunst/icons/nightshift.svg" "Night shift" "Screen temperature adjusted" -t 2500
 }
 
 night-shift::disable() {
   redshift -x
   rm -f "$DOTS_NIGHT_SHIFT_FILE"
-  notify-send -i "$DOTS_HOME/wm/dunst/icons/nightshift.png" "Night shift" "Screen temperature reseted" -t 2500
+  notify-send -i "$DOTS_HOME/wm/dunst/icons/nightshift.svg" "Night shift" "Screen temperature reseted" -t 2500
 }
 
 night-shift::toggle() {
