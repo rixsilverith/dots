@@ -9,6 +9,19 @@ bindkey '^H' backward-kill-word
 bindkey '^l' clear-screen
 bindkey '^D' backward-kill-line
 
+# use `ctrl + j` to jump to a bookmarked directory
+jump-directory() {
+  builtin cd "$(cat $DOTS_HOME/misc/dirs.index | fzf)"
+  if (( $? == 0 )); then
+    local precmd
+    for precmd in $precmd_functions; do $precmd; done
+    zle reset-prompt
+  fi
+}
+
+zle -N jump-directory
+bindkey '^j' jump-directory
+
 # Use `ctrl + u` to go one directory up
 up-directory() {
   builtin cd ..
