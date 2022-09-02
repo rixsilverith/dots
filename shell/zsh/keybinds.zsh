@@ -22,6 +22,14 @@ jump-directory() {
 zle -N jump-directory
 bindkey '^j' jump-directory
 
+# use `ctrl + o` to open the file explorer in the current directory
+open-file-explorer-here() {
+  $FILE_EXPLORER $(pwd) &> /dev/null & disown
+}
+
+zle -N open-file-explorer-here
+bindkey '^o' open-file-explorer-here
+
 # Use `ctrl + u` to go one directory up
 up-directory() {
   builtin cd ..
