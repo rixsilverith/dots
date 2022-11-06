@@ -1,0 +1,31 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/dot.sh"
+
+##? Manage webcam kernel module
+##?
+##? usage: doit <media> webcam <status|enable|disable>
+##?
+##?    Check current webcam module status. Enabling/disabling kernel
+##?    module requires root permission.
+##?
+docs::parse "$@"
+
+webcam::status() {
+    lsmod | grep uvcvideo &> /dev/null && echo "webcam enabled" || echo "webcam disabled"
+}
+
+webcam::enable() { sudo modprobe uvcvideo; }
+
+webcam::disable() { sudo modprobe -r uvcvideo; }
+
+[[ $# -eq 0 ]] && doit system webcam -h && exit 0
+
+cmd=$1
+case "$cmd" in
+  "status") webcam::status ;;
+  "enable") webcam::enable ;;
+  "disable") webcam::disable ;;
+  *) doit system webcam -h ;;
+esac
+
