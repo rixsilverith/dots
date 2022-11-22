@@ -11,7 +11,7 @@ bindkey '^D' backward-kill-line
 
 # use `ctrl + j` to jump to a bookmarked directory
 jump-directory() {
-  builtin cd "$(cat $DOTS_HOME/misc/dirs.index | fzf)"
+  builtin cd "/home/rix/$(cat $DOTS_HOME/misc/dirs.index | fzf)"
   if (( $? == 0 )); then
     local precmd
     for precmd in $precmd_functions; do $precmd; done
