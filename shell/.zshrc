@@ -6,6 +6,16 @@ setopt extendedglob     # Extended globbing
 
 source "$DOTS_HOME/shell/init.sh"   # Load shared shell aliases, exports and functions
 source "$DOTS_HOME/modules/z/z.sh"  # Initialize Z
+
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+	mkdir -p $ZIM_HOME && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
+		https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+fi
+
+# install missing modules, and update init.zsh if missing or outdated
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-$HOME}/.zimrc ]]; then
+	source ${ZIM_HOME}/zimfw.zsh init -q
+fi
 source "$ZIM_HOME/init.zsh"         # Initialize zim
 
 source "${ZDOTDIR:-$DOTS_HOME/shell/zsh}/history.zsh"  # Load zsh history config
