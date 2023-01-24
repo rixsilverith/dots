@@ -55,25 +55,25 @@ zle-line-init() {
 
 zle -N zle-line-init
 
-# Trigger `dot` command using `ctrl + f`
-dot-widget() {
-  source "$DOTS_HOME/scripts/core/dot.sh"
-  # Prevent the terminal from killing itself when `Esc` is pressed while
+# Trigger `doit` command using `ctrl + f`
+doit-widget() {
+  source "$DOTS_HOME/scripts/core/doit.sh"
+  # prevent the terminal from killing itself when `Esc` is pressed while
   # running this widget
   set +e
 
-  local -r paths="$(dot::list_scripts)"
+  local -r paths="$(doit::list_scripts)"
   script="$(
     echo "$paths" |
       xargs -I % sh -c 'echo "$(basename $(dirname %)) $(basename %)"' |
       fzf --layout reverse-list --height 9 --cycle --pointer '➜' \
         --preview-window='right,65%,border-sharp' \
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
-        --preview '"$DOTS_HOME/bin/dot" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
+        --preview '"$DOTS_HOME/bin/doit" $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h'
   )"
 
   if [[ -n $script ]]; then
-    script="dot $script"
+    script="doit $script"
     RBUFFER="${script} ${RBUFFER}"
   fi
 
@@ -81,5 +81,5 @@ dot-widget() {
   zle vi-end-of-line
 }
 
-zle -N dot-widget
-bindkey '^f' dot-widget
+zle -N doit-widget
+bindkey '^f' doit-widget
