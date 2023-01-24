@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$' \n\t'
+
+source "$DOTS_HOME/scripts/core/doit.sh"
+
+# if 'doit' is run without arguments, list all available scripts
+args::has_no_args "$@" && doit::completion "$(doit::list_scripts)"
+
+[[ $# -eq 1 && "$1" == "-h" ]] && doit::show_help
+
+context=$(doit::context_alias "$1")
+script="$2"
+shift 2
+
+doit::script_exists "$context" "$script" || log::abort "script doit $context $script does not exists or is not executable"
+"$DOTS_HOME/scripts/$context/$script" "$@"
