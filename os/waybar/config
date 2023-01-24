@@ -1,0 +1,50 @@
+{
+    "layer": "top",
+    "height": 23,
+    "modules-left": ["wlr/workspaces"],
+    "modules-right": ["backlight", "network", "pulseaudio", "battery", "clock"],
+    "battery": {
+        "states": {
+            "critical": 15
+        },
+        "format": "{capacity}% {icon} ",
+        "format-charging": "Charging {capacity}% {icon} ",
+        "format-icons": ["", "", "", "", ""],
+    },
+    "clock": { "format": "{:%a %b %d, %H:%M}" },
+    "network": {
+        "format-wifi": " ",
+        "format-ethernet": " ",
+        "format-disconnected": "No Internet connection :(",
+	"format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "婢 M",
+        "format-icons": {
+            "headphones": " ",
+            "default": [" "]
+        }
+    },
+    "wlr/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "6": "六",
+            "7": "七",
+            "8": "八",
+            "9": "九",
+            "10": "十"
+        }
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}% ",
+        "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    }
+}
