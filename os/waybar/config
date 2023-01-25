@@ -2,7 +2,7 @@
     "layer": "top",
     "height": 23,
     "modules-left": ["wlr/workspaces"],
-    "modules-right": ["backlight", "network", "pulseaudio", "battery", "clock"],
+    "modules-right": ["bluetooth", "backlight", "network", "pulseaudio", "battery", "clock"],
     "battery": {
         "states": {
             "critical": 15
@@ -46,5 +46,10 @@
         "device": "intel_backlight",
         "format": "{icon} {percent}% ",
         "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    },
+    "bluetooth": {
+        "format": "",
+        "format-disabled": "",
+        "format-connected": " {device_alias}",
     }
 }
