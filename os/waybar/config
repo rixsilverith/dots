@@ -3,7 +3,11 @@
     "height": 23,
     "modules-left": ["wlr/workspaces"],
     "modules-right": ["bluetooth", "backlight", "network", "pulseaudio", "battery", "clock"],
-    "clock": { "format": "{:%a %b %d, %H:%M}" },
+    "clock": {
+        "format": "{:%a %b %d, %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt>{calendar}</tt>",
+        "today-format": "<span color='gray'><b>{}</b></span>",
+    },
     "battery": {
         "states": {
             "critical": 15
@@ -19,7 +23,11 @@
         "format-icons": {
             "headphones": " ",
             "default": [" "]
-        }
+        },
+        "on-scroll-up": "pamixer -i 5",
+        "on-scroll-down": "pamixer -d 5",
+        "smooth-scrolling-threshold": 5.0,
+        "tooltip": false
     },
     "network": {
         "format-wifi": " ",
@@ -32,16 +40,27 @@
     "backlight": {
         "device": "intel_backlight",
         "format": "{icon} {percent}% ",
-        "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+        "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-",
+        "smooth-scrolling-threshold": 5.0,
     },
     "bluetooth": {
         "format": " ",
         "format-disabled": " ",
-        "format-connected": " {device_alias}"
+        "format-connected": " {device_alias}",
+        "on-click": "rfkill toggle $(rfkill list | grep Bluetooth | cut -d: -f1)",
+        "tooltip-format": "{num_connections} devices connected",
+        "tooltip-format-disabled": "Bluetooth is disabled",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}"
     },
     "wlr/workspaces": {
         "format": "{icon}",
         "on-click": "activate",
+        "on-scroll-up": "hyprctl dispatch workspace e-1",
+        "on-scroll-down": "hyprctl dispatch workspace e+1",
+        "smooth-scrolling-threshold": 3.0,
         "format-icons": {
             "1": "一",
             "2": "二",
@@ -54,5 +73,5 @@
             "9": "九",
             "10": "十"
         }
-    },
+    }
 }
