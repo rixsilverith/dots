@@ -1,13 +1,9 @@
 * {
     border: none;
     border-radius: 0;
-    /*font-family: "Operator Mono";*/
     font-family: "SF Pro Text Bold";
     font-weight: bold;
-    /* font-family: "Ubuntu Nerd Font"; */
-    /* font-family: Roboto, Helvetica, Arial, sans-serif; */
     font-size: 11px;
-    /*min-height: 13px;*/
 }
 
 @keyframes blink {
@@ -18,24 +14,16 @@
 }
 
 @keyframes blink-charge {
-    to {
-        /*background-color: #000;*/
-        color: #d1d1d1;
-    }
+    to { color: #d1d1d1; }
 }
 
 #waybar {
-    /* background: transparent; */
-    /* background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)); */
     background: rgba(0, 0, 0, 1);
-    /*background: red;*/
-    /* border-bottom: 3px solid rgba(100, 114, 125, 0.5); */
     color: white;
 }
 
 tooltip {
-  background: rgba(43, 48, 59, 0.8);
-  /* border: 1px solid rgba(100, 114, 125, 0.5); */
+    background: black;
 }
 tooltip label {
   color: white;
@@ -45,52 +33,25 @@ tooltip label {
     margin-left: 7px;
 }
 
+#workspaces button label {
+    font-weight: bolder;
+}
+
 #workspaces button {
-    /* padding: 0 5px; */
     background: transparent;
     color: white;
-    padding: 0 4px;
     margin-right: 6px;
-    /*
-    margin-top: 0px;
-    margin-bottom: 2px;*/
-    /* margin: 3px; */
+    padding: 0 4px;
     border-bottom: 2px solid transparent;
     transition: all ease-in-out .2s;
 }
 
-#workspaces button.hidden {
-    color: red;
-}
-
 #workspaces button.active {
-    /* border-radius: 100%; */
     border-bottom: 2px solid rgba(255, 255, 255, 0.9);
-
-    /*color: #000;
-    background: #fff;
-    border-radius: 3px;*/
 }
 
-#workspaces button.focused {
-    color: red;
-    /* background: #64727D; */
-    /* border-bottom: 3px solid white; */
-}
-
-/* #mode, #clock, #battery, #network { */
-/*     padding: 0 3px; */
-/*     margin: 0 2px; */
-/*     /1* padding: 0 10px; *1/ */
-/* } */
-
-#mode {
-    /* background: #64727D; */
-    /* border-bottom: 3px solid white; */
-}
-
-#clock {
-    /*margin-right: 7px;*/
+#workspaces button:hover {
+    padding: 0 16px;
 }
 
 #battery.charging {
@@ -122,37 +83,30 @@ tooltip label {
     animation-direction: alternate;
 }
 
-/* #workspaces, #window { */
-/*     margin: 0 4px; */
-/* } */
-
-
-/* white back on each module */
 #mode, #date, #clock, #battery, #network, #pulseaudio, #backlight, #bluetooth {
     background: #fff;
     color: #000;
-    /*padding: 0 0.6em;*/
-    padding: 0 0.3em;
-    /*margin: 4px;*/
-    /*border-radius: 4px;*/
     margin: 4px 0;
+    padding: 0 0.3em;
 }
 
 #clock {
 	margin-left: 7px;
     margin-right: 13px;
-    border-radius: 3px;
     padding: 0 0.6em;
-}
-
-#bluetooth {
-	border-radius: 3px 0 0 3px;
-    padding-left: 0.6em;
+    border-radius: 3px;
 }
 
 #battery {
-	border-radius: 0 3px 3px 0;
     padding-right: 0.6em;
+	border-radius: 0 3px 3px 0;
 }
 
+#bluetooth {
+    padding-left: 0.6em;
+	border-radius: 3px 0 0 3px;
+}
 
+#bluetooth.disabled {
+    color: gray;
+}

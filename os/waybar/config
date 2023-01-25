@@ -3,20 +3,15 @@
     "height": 23,
     "modules-left": ["wlr/workspaces"],
     "modules-right": ["bluetooth", "backlight", "network", "pulseaudio", "battery", "clock"],
+    "clock": { "format": "{:%a %b %d, %H:%M}" },
     "battery": {
         "states": {
             "critical": 15
         },
         "format": "{capacity}% {icon} ",
-        "format-charging": "Charging {capacity}% {icon} ",
+        "format-charging": "{capacity}% {icon} ",
         "format-icons": ["", "", "", "", ""],
-    },
-    "clock": { "format": "{:%a %b %d, %H:%M}" },
-    "network": {
-        "format-wifi": " ",
-        "format-ethernet": " ",
-        "format-disconnected": "No Internet connection :(",
-	"format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "interval": 2
     },
     "pulseaudio": {
         "format": "{icon}  {volume}%",
@@ -25,6 +20,24 @@
             "headphones": " ",
             "default": [" "]
         }
+    },
+    "network": {
+        "format-wifi": " ",
+        "format-ethernet": " ",
+        "format-disconnected": "睊 No Internet connection :(",
+	    "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "format-linked": "{ifname} {Obtaining IP}",
+        "tooltip-format": "{ifname} via {gwaddr}",
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}% ",
+        "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    },
+    "bluetooth": {
+        "format": " ",
+        "format-disabled": " ",
+        "format-connected": " {device_alias}"
     },
     "wlr/workspaces": {
         "format": "{icon}",
@@ -42,14 +55,4 @@
             "10": "十"
         }
     },
-    "backlight": {
-        "device": "intel_backlight",
-        "format": "{icon} {percent}% ",
-        "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "]
-    },
-    "bluetooth": {
-        "format": "",
-        "format-disabled": "",
-        "format-connected": " {device_alias}",
-    }
 }
