@@ -4,9 +4,9 @@ source "$DOTS_HOME/scripts/core/lib.sh"
 
 ##? Set the workspace background image
 ##?
-##? usage: doit ui wall [name]
+##? usage: doit ui background [name]
 ##?
-##?    If [name] is not provided, a list with the available walls will be
+##?    If no [name] is provided, a list with the available background will be
 ##?    displayed for one to be selected.
 ##?
 docs::parse "$@"
@@ -14,14 +14,14 @@ docs::parse "$@"
 
 walls_dir="$DOTS_HOME/misc/walls"
 
-wall::set() {
+background::set() {
   cp "$walls_dir/${1}.jpg" "$walls_dir/.wall.jpg"
   swaybg --image "$walls_dir/.wall.jpg" &> /dev/null &
   #feh --bg-scale --no-fehbg "$walls_dir/.wall.jpg"
   #notify-send -i "$DOTS_HOME/wm/dunst/icons/background.svg" "Background changed" "Background changed to <b>${1}</b>!"
 }
 
-wall::list() {
+background::list() {
   local -r walls=($(fd . "$walls_dir" --extension jpg))
   declare -a wall_list
 
@@ -37,5 +37,4 @@ wall::list() {
   wall::set "${selected,,}" && exit 0
 }
 
-[[ $# -eq 0 ]] && wall::list || wall::set "$1"
-
+[[ $# -eq 0 ]] && background::list || background::set "$1"
