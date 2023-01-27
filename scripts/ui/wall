@@ -1,23 +1,24 @@
 #!/usr/bin/bash
 
-source "$DOTS_HOME/scripts/core/dot.sh"
+source "$DOTS_HOME/scripts/core/lib.sh"
 
-##? Sets the desktop wall
+##? Set the workspace background image
 ##?
-##? Usage: dot ui wall [name]
+##? usage: doit ui wall [name]
 ##?
 ##?    If [name] is not provided, a list with the available walls will be
 ##?    displayed for one to be selected.
 ##?
 docs::parse "$@"
-script::depends_on feh fd dmenu
+# script::depends_on feh fd dmenu swaybg
 
 walls_dir="$DOTS_HOME/misc/walls"
 
 wall::set() {
   cp "$walls_dir/${1}.jpg" "$walls_dir/.wall.jpg"
-  feh --bg-scale --no-fehbg "$walls_dir/.wall.jpg"
-  notify-send -i "$DOTS_HOME/wm/dunst/icons/background.svg" "Background changed" "Background changed to <b>${1}</b>!"
+  swaybg --image "$walls_dir/.wall.jpg" &> /dev/null &
+  #feh --bg-scale --no-fehbg "$walls_dir/.wall.jpg"
+  #notify-send -i "$DOTS_HOME/wm/dunst/icons/background.svg" "Background changed" "Background changed to <b>${1}</b>!"
 }
 
 wall::list() {
@@ -30,7 +31,9 @@ wall::list() {
     wall_list+=("${name^}")
   done
 
-  selected=$(printf '%s\n' "${wall_list[@]}" | dmenu -p "Choose a wall to set ")
+  selected=$(printf '%s\n' "${wall_list[@]}" | fzf --layout reverse-list --height 10% --cycle --pointer '➜' \
+        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1')
+  # selected=$(printf '%s\n' "${wall_list[@]}" | dmenu -p "Choose a wall to set ")
   wall::set "${selected,,}" && exit 0
 }
 
