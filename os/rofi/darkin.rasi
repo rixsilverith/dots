@@ -101,4 +101,3 @@ element normal normal {
     background-color: @selected-active-background;
     text-color: @selected-active-foreground;
 }
-
