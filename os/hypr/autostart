@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-hyprpaper &
+swaybg --image "$DOTS_HOME/misc/walls/.wall.jpg" &
 udiskie &
-unclutter &
 mako &
