@@ -1,0 +1,23 @@
+layer=top
+anchor=top-center
+font=JetBrainsMono Nerd Font Mono 8
+background-color=#0f0f0f
+text-color=#f0f0f0
+width=600
+height=50
+outer-margin=20
+margin=5
+padding=5
+border-size=1
+border-color=#262626
+progress-color=over #262626ff
+border-radius=3
+default-timeout=5000
+format=<b>%s</b> %b
+group-by=summary
+
+[grouped]
+format=<b>%s</b>\n%b
+
+[mode=do-not-disturb]
+invisible=1
