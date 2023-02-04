@@ -1,7 +1,8 @@
 # Compiled Zsh
-shell/zsh/**/**.zwc
-shell/zsh/**/**.zwc.old
-shell/zsh/**/**.zcompdump
+shell/**/**.zwc
+shell/**/**.zwc.old
+shell/**/**.zcompdump
+shell/**/.zcompcache
 
 # Compiled binaries
 bin/compiled/
