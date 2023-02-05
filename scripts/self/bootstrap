@@ -1,0 +1,34 @@
+#!/usr/bin/bash
+
+##? Bootstrap the dots configuration
+##? usage: doit (system|sys) bootstrap
+##?
+##? Bootstraping is idempotent
+
+source "$DOTS_HOME/scripts/core/lib.sh"
+docs::parse "$@"
+script::requires zsh curl
+
+ZIM_HOME="$DOTS_HOME/shell/zimfw"
+ZIM_UPSTREAM="https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh"
+
+info() { echo -e "> $1"; }
+
+info "Applying symlinks specified in \$DOTS_HOME/misc/symlinks.csv"
+"$DOTS_HOME/bin/doit" self link
+
+[[ ! -f "$XDG_DATA_HOME/.z" ]] && touch "$XDG_DATA_HOME/.z"
+
+if [[ ! "$SHELL" == *"zsh"* ]]; then
+    info "Setting zsh as the default shell"
+    sudo chsh -s "$(command -v zsh)"
+fi
+
+info "Configuring zsh. This might need root permission"
+echo "export ZDOTDIR=$HOME/.dots/shell/zsh" | sudo tee -a /etc/zsh/zshenv > /dev/null
+
+info "Configuring zsh with Zim"
+
+curl -fsSL --create-dirs -o "$ZIM_HOME/zimfw.zsh" $ZIM_UPSTREAM  2>&1 && zsh "$ZIM_HOME" install 2>&1
+
+echo -e "Done bootstraping dots. May need to log in again for everything to take full effect"
