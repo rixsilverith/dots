@@ -36,12 +36,21 @@ darkin::user() {
 darkin::dir() {
   local dir="$(pwd)"
   local dir_segment="${dir/$HOME/~}"
+  local is_bookmark=""
+
+  if [[ -f "$DOTS_HOME/misc/dirs.index" ]]; then
+    if grep -E "^${dir/$HOME\//}$" "$DOTS_HOME/misc/dirs.index" &> /dev/null; then
+      is_bookmark=" [*]"
+    fi
+  fi
 
   if [[ $DARKIN_PROMPT_SHORT_PWD == true && $dir != $HOME ]]; then
     # Hmm... yeah WTF. Stolen with <3 from https://github.com/CodelyTV/dotly/blob/master/scripts/core/short_pwd
     dir=$(echo ${${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}/\/\//\/})
     dir_segment="$dir"
   fi
+
+  dir_segment="$dir_segment$is_bookmark"
 
   echo "$DARKIN_PROMPT_DIR_PREFIX$dir_segment"
 }

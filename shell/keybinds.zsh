@@ -11,13 +11,19 @@ bindkey '^D' backward-kill-line
 
 # use `ctrl + j` to jump to a bookmarked directory
 jump-directory() {
-  builtin cd "$HOME/$(cat $DOTS_HOME/misc/dirs.index | fzf \
+  local dir=$(cat $DOTS_HOME/misc/dirs.index | fzf \
     --layout reverse-list --height 20% --cycle \
     --pointer '➜' \
-    --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
-  )"
-  if (( $? == 0 )); then
-    local precmd
+    --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1')
+  local resolved_dir="$HOME/$dir"
+
+  [[ -d $resolved_dir ]] && builtin cd $resolved_dir
+  local precmd
+  for precmd in $precmd_functions; do $precmd; done
+  zle reset-prompt
+
+  if [[ ! -d $resolved_dir ]]; then
+    [[ $dir == " " ]] && echo -e "\n! $dir directory does not exists"
     for precmd in $precmd_functions; do $precmd; done
     zle reset-prompt
   fi
@@ -46,6 +52,28 @@ up-directory() {
 
 zle -N up-directory
 bindkey '^u' up-directory
+
+# bookmark a directory if not bookmarked yet.
+# removes it if in bookmarks
+bookmark-directory() {
+  DIRS_INDEX="$DOTS_HOME/misc/dirs.index"
+  [[ ! -f $DIRS_INDEX ]] && touch $DIRS_INDEX
+
+  direc=${$(pwd)/$HOME\//}
+
+  if ! grep -E "^${direc}$" $DIRS_INDEX &> /dev/null; then
+    echo $direc >> $DIRS_INDEX
+  else
+    sed "$(grep -n -E "^${direc}$" $DIRS_INDEX | awk -F: '{print $1}')d" -i $DIRS_INDEX
+  fi
+
+  local precmd
+  for precmd in $precmd_functions; do $precmd; done
+  zle reset-prompt
+}
+
+zle -N bookmark-directory
+bindkey '^b' bookmark-directory
 
 # Use `beam` cursor style
 zle-line-init() {
