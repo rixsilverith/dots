@@ -55,6 +55,11 @@ darkin::dir() {
   echo "$DARKIN_PROMPT_DIR_PREFIX$dir_segment"
 }
 
+darkin::virtual_env() {
+  [[ -n "$VIRTUAL_ENV" ]] || return
+  echo " (${VIRTUAL_ENV:t})"
+}
+
 darkin::git::ensure_git_repo() {
   [[ $(git rev-parse --is-inside-work-tree &> /dev/null; echo "$?") == '0' ]]
 }
@@ -90,7 +95,7 @@ darkin::git() {
 
 darkin::prompt() {
   DARKIN_LAST_STATUS="$status"
-  DARKIN_PROMPT="%B$(darkin::symbol)$(darkin::user)$(darkin::dir)$(darkin::git)%b "
+  DARKIN_PROMPT="%B$(darkin::symbol)$(darkin::user)$(darkin::dir)$(darkin::virtual_env)$(darkin::git)%b "
   PROMPT="$DARKIN_PROMPT"
 
   [[ $DARKIN_PROMPT_ADD_NEWLINE == true ]] && PROMPT="$PROMPT"$'\n> '
