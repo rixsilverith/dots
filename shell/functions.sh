@@ -11,8 +11,9 @@ has() {
 # Create a directory and jump to it.
 # Usage: mkcd <directory>
 mkcd() {
-  local -r dir="$*"
-  mkdir -p "$dir" && cd "$dir"
+  local -r dir="$1"
+  [[ -z $dir ]] && echo "mkcd: cannot create directory with empty name\nusage: mkcd <dirname>" && exit 1
+  mkdir -p "$dir" && builtin cd "$dir"
 }
 
 # Copy a file or folder. Create the filepath if it doesn't exist.
