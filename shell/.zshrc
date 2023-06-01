@@ -27,6 +27,11 @@ fpath=("$DOTS_HOME/shell/zsh/themes" $fpath)  # Set path for themes
 autoload -Uz promptinit && promptinit
 prompt ${DOTS_THEME:-darkin}
 
+# prevent control characters from being printed on key press
+# see: https://superuser.com/questions/146815/prevent-c-from-being-printed-when-aborting-editing-current-prompt
+# see: https://superuser.com/questions/147013/how-to-disable-c-from-being-echoed-on-linux-on-ctrl-c
+stty -echoctl
+
 # Log a visit to a directory in fre database
 fre_chpwd() { fre --add "$(pwd)"; }
 typeset -gaU chpwd_functions
