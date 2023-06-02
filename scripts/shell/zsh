@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 
-source "$DOTS_HOME/scripts/core/dot.sh"
+source "$DOTS_HOME/scripts/core/lib.sh"
 
 ##? Zsh helpers and utilities
 ##?
-##? Usage: dot (shell|sh) zsh (benchmark|optimize)
+##? usage: doit (shell|sh) zsh (benchmark|optimize)
 ##?
-##?    Some helper functions to benchmark and optimize Zsh.
+##?    Some helper functions to benchmark and optimize zsh.
 ##?
 docs::parse "$@"
 script::depends_on hyperfine
@@ -25,11 +25,11 @@ zsh::optimize() {
   zsh -c "source ${ZDOTDIR:-${DOTS_HOME}/shell/zsh}/.zlogin"
 }
 
-[[ $# -eq 0 ]] && dot shell zsh -h && exit 0
+[[ $# -eq 0 ]] && doit shell zsh -h && exit 0
 
 cmd=$1
 case "$cmd" in
   "benchmark") zsh::benchmark ;;
   "optimize") zsh::optimize ;;
-  *) dot shell zsh -h ;;
+  *) doit shell zsh -h ;;
 esac

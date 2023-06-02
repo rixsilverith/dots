@@ -1,24 +1,23 @@
 #!/usr/bin/bash
 
-source "$DOTS_HOME/scripts/core/dot.sh"
+source "$DOTS_HOME/scripts/core/lib.sh"
 
-##? Cleans useless files such as cache, empties trash, etc.
+##? Clean caches, empty trash, remove dead symlinks and empty dirs
 ##?
-##? Usage: dot (system|sys) clean
+##? usage: doit (system|sys) clean
 ##?
 ##?    Requires root priviledge in order to perform a full clean up.
 ##?
 docs::parse "$@"
 
-set +e # Prevent the script from crashing if there is some error
+set +e # prevent the script from crashing if there is some error
 
-# `dot system clean` requires root priviledges. So check if sudo is passwordless
-# and update the current sudo time stamp until the script has finished.
-grep -q "NOPASSWD:     ALL" /etc/sudoers.d/$LOGNAME > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-  sudo -v
-  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
-fi
+# authenticate user and refresh cached credentials for the rest of the script
+sudo -v
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2> /dev/null &
+
+log::info "Removing empty directories and files"
+fd . $HOME --type empty --exclude .git --exec rm -rf
 
 log::info "Purging directories that no longer exist from fre"
 fre --sorted | while read dir; do if [ ! -d "$dir" ]; then fre --delete "$dir"; fi; done
@@ -30,10 +29,10 @@ log::info "Removing orphan packages from the system"
 pacman -Qtdq | sudo pacman -Rns --noconfirm - &> /dev/null
 
 log::info "Removing broken symlinks"
-fd . "$HOME" -HL -t l 2> /dev/null -x rm {} \;
+fd . $HOME --hidden --follow --type symlink --exec rm -rf
 
 log::info "Cleaning zsh cache"
-dot shell zsh optimize &> /dev/null
+doit shell zsh optimize &> /dev/null
 
 log::success "Clean up done!"
 

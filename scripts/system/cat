@@ -1,10 +1,10 @@
 #!/bin/bash
 
-source "$DOTS_HOME/scripts/core/dot.sh"
+source "$DOTS_HOME/scripts/core/lib.sh"
 
 ##? Shows a cute cat when using the cat command
 ##?
-##? Usage: dot (system|sys) cat <file>
+##? usage: doit (system|sys) cat <file>
 ##?
 ##?    Don't try to pat the cat, really.
 ##?

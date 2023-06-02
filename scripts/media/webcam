@@ -1,18 +1,20 @@
 #!/usr/bin/bash
 
-source "$DOTS_HOME/scripts/core/dot.sh"
+source "$DOTS_HOME/scripts/core/lib.sh"
 
 ##? Manage webcam kernel module
 ##?
 ##? usage: doit <media> webcam <status|enable|disable>
 ##?
 ##?    Check current webcam module status. Enabling/disabling kernel
-##?    module requires root permission.
+##?    module requires root priviledge.
 ##?
 docs::parse "$@"
 
 webcam::status() {
-    lsmod | grep uvcvideo &> /dev/null && echo "webcam enabled" || echo "webcam disabled"
+    lsmod | grep uvcvideo &> /dev/null \
+        && echo "uvcvideo kernel module enabled" \
+        || echo "uvcvideo kernel module disabled" && exit 1
 }
 
 webcam::enable() { sudo modprobe uvcvideo; }

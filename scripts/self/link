@@ -1,13 +1,13 @@
 #!/usr/bin/bash
 
-source "$DOTS_HOME/scripts/core/dot.sh"
+source "$DOTS_HOME/scripts/core/lib.sh"
 
-##? Symlinks dotfiles and configurations
+##? Symlink as specified in `$DOTS_HOME/misc/symlinks.csv`
 ##?
-##? Usage: dot self link
+##? usage: doit self link
 ##?
-##?    Note to self: This script may overwrite some files, so just... be
-##?    careful... I guess. Used by `dot self install`.
+##?    Note to self: this script may overwrite some files, so just... be
+##?    careful... I guess. Used by `doit self install`.
 ##?
 docs::parse "$@"
 

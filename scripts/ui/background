@@ -34,7 +34,7 @@ background::list() {
   selected=$(printf '%s\n' "${wall_list[@]}" | fzf --layout reverse-list --height 10% --cycle --pointer '➜' \
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1')
   # selected=$(printf '%s\n' "${wall_list[@]}" | dmenu -p "Choose a wall to set ")
-  wall::set "${selected,,}" && exit 0
+  background::set "${selected,,}" && exit 0
 }
 
 [[ $# -eq 0 ]] && background::list || background::set "$1"
