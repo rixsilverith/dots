@@ -20,7 +20,7 @@ n_behind_repos=0
 set +e # failsafe
 echo -e "Finding unpushed commits in Git repositories under \033[1m$base_dir\033[0m"
 
-fd --type d --hidden --base-directory "$base_dir" ".git$" | while read -r git_dir; do
+while IFS= read -r git_dir; do
     repo_dir=$(dirname "$base_dir/$git_dir")
 
     repo_branch=$(git -C "$repo_dir" symbolic-ref --short HEAD 2> /dev/null)
@@ -29,8 +29,13 @@ fd --type d --hidden --base-directory "$base_dir" ".git$" | while read -r git_di
     unpushed_count=$(git -C "$repo_dir" rev-list --count "$repo_branch@{u}..$repo_branch" 2> /dev/null)
     [[ $unpushed_count -gt 0 ]] || continue
 
-    echo -e "Found \033[1m$unpushed_count\033[0m unpushed commits in Git repo \033[1m$(dirname "$git_dir")\033[0m"
+    [[ "$base_dir" == "$repo_dir" ]] && repo_name="${repo_dir##*/} (base dir)" || repo_name="$(dirname "$git_dir")"
+    echo -e "Found \033[1m$unpushed_count\033[0m unpushed commits in Git repo \033[1m$repo_name\033[0m"
     n_behind_repos=$(( n_behind_repos + 1 ))
-done
 
-[[ $n_behind_repos -eq 0 ]] && echo -e "\033[1mNo Git repositories\033[0m with unpushed commits were found under the given base directory"
+done < <(fd --type d --hidden --base-directory "$base_dir" ".git$" | sort)
+
+[[ $n_behind_repos -eq 0 ]] \
+    && echo -e "\033[1mNo Git repositories\033[0m with unpushed commits were found under the given base directory" \
+    || exit 0
+
