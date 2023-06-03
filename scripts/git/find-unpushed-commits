@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/lib.sh"
+
+##? Find unpushed commits in Git repos recursively
+##?
+##? usage: doit git find-unpushed-commits <base-dir>
+##?
+##?     Find Git repos recursively from <base-dir> (which can be a Git repo
+##?     itself) and look for any unpushed commits to its remote branches.
+##?
+docs::parse "$@"
+
+base_dir="$1"
+
+[[ -z "$base_dir" ]] && $0 -h && exit 1
+[[ ! -d "$base_dir" ]] && echo "$base_dir is not a directory" && exit 1
+
+set +e # failsafe
+fd --type d --hidden --base-directory "$base_dir" ".git$" | while read -r git_dir; do
+    repo_dir=$(dirname "$base_dir/$git_dir")
+
+    repo_branch=$(git -C "$repo_dir" symbolic-ref --short HEAD 2> /dev/null)
+    [[ -n "$repo_branch" ]] || continue
+
+    unpushed_count=$(git -C "$repo_dir" rev-list --count "$repo_branch@{u}..$repo_branch" 2> /dev/null)
+    [[ $unpushed_count -gt 0 ]] || continue
+
+    echo "found $unpushed_count unpushed commits in repo: $(dirname "$git_dir")"
+done
