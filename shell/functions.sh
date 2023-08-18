@@ -72,3 +72,20 @@ nrand() {
   echo $(( RANDOM % ( ceiling - floor + 1 ) + floor ))
 }
 
+git() {
+  # git commit wrapper to include identity confirmation before commit
+
+  if [[ "$1" == "commit" ]]; then
+    echo -en "Committing as \033[7m$(git config user.name) ($(git config user.email))\033[27m Is this fine? [y/N] "
+    read -r yn
+    case "$yn" in
+      [yY]) echo ;;
+      *) return 1 ;;
+    esac
+    shift
+    command git commit "$@"
+  else
+    command git "$@"
+  fi
+}
+
