@@ -2,19 +2,33 @@
 
 source "$DOTS_HOME/scripts/core/lib.sh"
 
-##? Attach to a running Docker container instance
-##? usage: doit docker attach
+##? Attach to a running (either local or remote) Docker container instance
+##? usage: doit docker attach [ssh options]
+##?
+##?     [ssh options] can be a single host listed in ~/.ssh/config
+##?     Requires the (local or SSH) user to be in the docker group
 docs::parse "$@"
 
-docker info > /dev/null 2>&1
-if [[ $? -ne 0 ]]; then
-    echo "Docker daemon is not running (return error code $?)"
-    exit 1
+ssh_prefix=""
+[[ $# -ne 0 ]] && ssh_prefix="$*"
+
+ps_cmd="docker ps --format \"{{.ID}} {{.Names}}\""
+
+if [[ -n "$ssh_prefix" ]]; then
+    # shellcheck disable=SC2029
+    containers=$(ssh "$ssh_prefix" "$ps_cmd")
+    # shellcheck disable=SC2181
+    [[ $? -ne 0 ]] && echo "Docker daemon is not running :(" && exit 1
+else
+    containers=$(eval "$ps_cmd")
 fi
 
-containers=$(docker ps --format "{{.ID}} {{.Names}}")
-container=$(echo "$containers" | awk '{print $2}' | fzf --height 50% --reverse --prompt="select a container >")
+set +e # failsafe
+container=$(echo "$containers" | awk '{print $2}' | fzf --height 50% --reverse)
+[[ -z "$container" ]] && echo "No container selected" && exit 1
 
-[[ -z "$container" ]] && exit 0
+container_id=$(echo "$container" | grep "$container" | awk '{print $1}')
+attach_cmd="docker exec -it \"$container_id\" /bin/bash || docker exec -it \"$container_id\" /bin/sh"
 
-docker exec -it "$(echo "$containers" | grep "$container" | awk '{print $1}')" bash
+if [[ -n "$ssh_prefix" ]]; then ssh -tt "$ssh_prefix" "$attach_cmd"; else eval "$attach_cmd"; fi
+
