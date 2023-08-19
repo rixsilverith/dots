@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+
+source "$DOTS_HOME/scripts/core/lib.sh"
+
+##? Attach to a running Docker container instance
+##? usage: doit docker attach
+docs::parse "$@"
+
+docker info > /dev/null 2>&1
+if [[ $? -ne 0 ]]; then
+    echo "Docker daemon is not running (return error code $?)"
+    exit 1
+fi
+
+containers=$(docker ps --format "{{.ID}} {{.Names}}")
+container=$(echo "$containers" | awk '{print $2}' | fzf --height 50% --reverse --prompt="select a container >")
+
+[[ -z "$container" ]] && exit 0
+
+docker exec -it "$(echo "$containers" | grep "$container" | awk '{print $1}')" bash
