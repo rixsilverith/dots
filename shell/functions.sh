@@ -93,11 +93,8 @@ bookmark-multiplexer() {
   local entries=""
   local tmux_sessions=$(tmux ls)
   if [[ -n "$tmux_sessions" ]]; then
-    tmux_sessions=$(echo "$tmux_sessions" | cut -d: -f1)
-    entries="$(echo "$tmux_sessions" | sed -E 's/$/ [tmux session]/')\n"
+    entries="$(echo "$tmux_sessions" | sed -E 's/^([^:]+): ([0-9]+) windows \(created[^)]+\)/\1 [tmux session]/')\n"
   fi
-
-  DIRS_INDEX="$DOTS_HOME/misc/dirs.index"
 
   if [[ -f "$DIRS_INDEX" ]]; then
     dirs_index_entries=$(cat "$DIRS_INDEX")
@@ -111,38 +108,25 @@ bookmark-multiplexer() {
 
   [[ -z "$selected_entry" ]] && return 0
 
-  local resolved_dir="$HOME/$selected_entry"
-
-  if [[ -z "$TMUX" ]]; then
-    # attach to running tmux session
-    if echo "$selected_entry" | grep "\[tmux session\]" &> /dev/null; then
-      local tmux_session_name="$(echo "$selected_entry" | sed 's/ \[tmux session\]//')"
-      tmux attach-session -t "$tmux_session_name"
-      return 0
-    fi
-
-    # new tmux session on destination dir
-    selected_entry_basename=$(basename "$selected_entry" | tr . _)
-    if ! tmux has-session -t "$selected_entry_basename" 2> /dev/null; then
-      tmux new-session -s "$selected_entry_basename" -c "$resolved_dir"
-      return 0
-    fi
-  fi
-
-  # switch to selected running tmux session
+  # tmux session selected
   if echo "$selected_entry" | grep "\[tmux session\]" &> /dev/null; then
-    local tmux_session_name="$(echo "$selected_entry" | sed 's/ \[tmux session\]//')"
-    tmux switch-client -t "$tmux_session_name"
+    local session_name=$(echo "$selected_entry" | cut -d' ' -f1)
+    [[ -z "$TMUX" ]] && tmux attach-session -t "$session_name" || tmux switch-client -t "$session_name"
     return 0
   fi
 
-  # in a running tmux session, cd to selected dir
-  if [[ -d "$resolved_dir" ]]; then
-    cd "$resolved_dir" || return
-  else
-    echo -e "\n! $selected_entry directory does not exist"
+  # directory selected: new tmux session on dir if not already attached to session, else just cd into dir
+  local resolved_dir="$HOME/$selected_entry"
+  if [[ -z "$TMUX" ]]; then
+    local session_name=$(basename "$selected_entry" | tr . _)
+    if ! tmux has-session -t "$session_name" 2> /dev/null; then
+      tmux new-session -s "$session_name" -c "$resolved_dir"
+    else
+      tmux attach-session -t "$session_name"
+    fi
+    return 0
   fi
 
-  return 0
+  [[ -d "$resolved_dir" ]] && cd "$resolved_dir" || echo "! $selected_entry directory does not exist or is invalid"
 }
 
