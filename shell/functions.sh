@@ -89,3 +89,60 @@ git() {
   fi
 }
 
+bookmark-multiplexer() {
+  local entries=""
+  local tmux_sessions=$(tmux ls)
+  if [[ -n "$tmux_sessions" ]]; then
+    tmux_sessions=$(echo "$tmux_sessions" | cut -d: -f1)
+    entries="$(echo "$tmux_sessions" | sed -E 's/$/ [tmux session]/')\n"
+  fi
+
+  DIRS_INDEX="$DOTS_HOME/misc/dirs.index"
+
+  if [[ -f "$DIRS_INDEX" ]]; then
+    dirs_index_entries=$(cat "$DIRS_INDEX")
+    [[ -n "$dirs_index_entries" ]] && entries="$entries$dirs_index_entries"
+  fi
+
+  local selected_entry=$(echo -e "$entries" | fzf \
+    --layout reverse-list --height 100% --cycle \
+    --pointer '➜' \
+    --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1')
+
+  [[ -z "$selected_entry" ]] && return 0
+
+  local resolved_dir="$HOME/$selected_entry"
+
+  if [[ -z "$TMUX" ]]; then
+    # attach to running tmux session
+    if echo "$selected_entry" | grep "\[tmux session\]" &> /dev/null; then
+      local tmux_session_name="$(echo "$selected_entry" | sed 's/ \[tmux session\]//')"
+      tmux attach-session -t "$tmux_session_name"
+      return 0
+    fi
+
+    # new tmux session on destination dir
+    selected_entry_basename=$(basename "$selected_entry" | tr . _)
+    if ! tmux has-session -t "$selected_entry_basename" 2> /dev/null; then
+      tmux new-session -s "$selected_entry_basename" -c "$resolved_dir"
+      return 0
+    fi
+  fi
+
+  # switch to selected running tmux session
+  if echo "$selected_entry" | grep "\[tmux session\]" &> /dev/null; then
+    local tmux_session_name="$(echo "$selected_entry" | sed 's/ \[tmux session\]//')"
+    tmux switch-client -t "$tmux_session_name"
+    return 0
+  fi
+
+  # in a running tmux session, cd to selected dir
+  if [[ -d "$resolved_dir" ]]; then
+    cd "$resolved_dir" || return
+  else
+    echo -e "\n! $selected_entry directory does not exist"
+  fi
+
+  return 0
+}
+

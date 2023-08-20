@@ -1,12 +1,9 @@
 #!/usr/bin/zsh
 
-# General key bindings
-autoload -Uz edit-command-line && zle -N edit-command-line
-bindkey '^K' edit-command-line
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
 bindkey '^H' backward-kill-word
-bindkey '^l' clear-screen
+bindkey '^L' clear-screen
 bindkey '^D' backward-kill-line
 
 # use `ctrl + j` to jump to a bookmarked directory
@@ -29,8 +26,8 @@ jump-directory() {
   fi
 }
 
-zle -N jump-directory
-bindkey '^j' jump-directory
+bindkey -r '^K'
+bindkey -s '^K' 'bookmark-multiplexer\n'
 
 # use `ctrl + o` to open the file explorer in the current directory
 open-file-explorer-here() {
@@ -111,3 +108,4 @@ doit-widget() {
 
 zle -N doit-widget
 bindkey '^f' doit-widget
+
