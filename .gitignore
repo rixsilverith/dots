@@ -1,3 +1,5 @@
+*.no-commit.*
+
 /**/__pycache__/
 bin/compiled/
 misc/walls/.wall.jpg
