@@ -1,17 +1,12 @@
-# Compiled Zsh
+/**/__pycache__/
+bin/compiled/
+misc/walls/.wall.jpg
+util/redshift/.night-shift-enabled
+editors/nvim/lazy-lock.json
+
+# compiled zsh things
 shell/**/**.zwc
 shell/**/**.zwc.old
 shell/**/**.zcompdump
 shell/**/.zcompcache
 
-# Compiled binaries
-bin/compiled/
-
-# Python cache
-/**/__pycache__/
-
-# Current wallpaper
-misc/walls/.wall.jpg
-
-# Night mode file
-util/redshift/.night-shift-enabled
