@@ -358,17 +358,33 @@ local plugins = {
             local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
             local cmp_mappings = {
-                ['<CR>'] = cmp.mapping.confirm({select = false}),
+                ['<CR>'] = cmp.mapping.confirm({
+                    behavior = cmp.ConfirmBehavior.Insert, select = true
+                }),
 
                 ['<C-f>'] = cmp_action.luasnip_jump_forward(),
                 ['<C-b>'] = cmp_action.luasnip_jump_backward(),
             }
 
+            require('luasnip.loaders.from_vscode').lazy_load({ paths = vim.fn.stdpath "config" .. "/snippets" })
+
             cmp.setup({
                 mapping = cmp_mappings,
                 preselect = 'item',
                 completion = { completeopt = 'menu,menuone,noinsert' },
-                experimental = { ghost_text = true }
+                experimental = { ghost_text = true },
+                sources = {
+                    { name = "nvim_lsp" },
+                    { name = "luasnip" },
+                    { name = "buffer" },
+                    { name = "nvim_lua" },
+                    { name = "path" }
+                },
+                snippet = {
+                    expand = function(args)
+                        require('luasnip').lsp_expand(args.body)
+                    end
+                }
             })
             cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
         end
