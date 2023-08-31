@@ -14,11 +14,38 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     'nvim-lua/plenary.nvim',
     "lewis6991/impatient.nvim",
-    "tpope/vim-commentary",
     "tpope/vim-surround",
     "tpope/vim-fugitive",
     "editorconfig/editorconfig-vim",
-    { "lukas-reineke/indent-blankline.nvim" },
+    {
+        'numToStr/Comment.nvim',
+        opts = {},
+    },
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    {
+        'stefanlogue/hydrate.nvim',
+        opts = { minute_interval = 30 }
+    },
+    { "lukas-reineke/indent-blankline.nvim",
+        event = "VeryLazy",
+        opts = function()
+            local opts = {
+                indentLine_enabled = 1,
+                filetype_exclude = {
+                    "help", "terminal", "lazy", "lspinfo", "TelescopePrompt", "TelescopeResults", "mason"
+                },
+                buftype_exclude = { "terminal" },
+                show_trailing_blankline_indent = false,
+                show_first_indent_level = false,
+                show_current_context = true,
+                show_current_context_start = true
+            }
+            return opts
+        end,
+        config = function(_, opts)
+            require('indent_blankline').setup(opts)
+        end
+    },
     {
         "andweeb/presence.nvim",
         config = function()
