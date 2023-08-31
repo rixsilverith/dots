@@ -14,12 +14,15 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     'nvim-lua/plenary.nvim',
     "lewis6991/impatient.nvim",
-    "tpope/vim-surround",
     "tpope/vim-fugitive",
     "editorconfig/editorconfig-vim",
     {
-        'numToStr/Comment.nvim',
-        opts = {},
+        'kylechui/nvim-surround', version = '*', event = 'VeryLazy',
+        config = function() require('nvim-surround').setup({}) end
+    },
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    {
+        'numToStr/Comment.nvim', opts = {},
     },
     'JoosepAlviste/nvim-ts-context-commentstring',
     {
