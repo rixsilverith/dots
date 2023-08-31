@@ -4,11 +4,10 @@ end
 
 vim.g.mapleader = ' '
 
-keymap('n', '<leader>w', ':w<cr>')
+keymap('n', '<leader>w', ':up<cr>') -- save buffer only if modified
 keymap('n', '<leader>wq', ':wq<cr>')
 keymap('n', '<leader>q', ':q<cr>')
 keymap('n', '<leader>bq', ':bd<cr>') -- close current buffer
-
 keymap('n', '<leader>fs', ':Telescope git_files<cr>')
 keymap('n', '<leader>ff', ':Telescope find_files<cr>')
 
@@ -43,6 +42,7 @@ keymap('n', '<C-l>', ':wincmd l<cr>')
 
 keymap('i', 'jk', '<Esc>')
 keymap('i', '<Esc>', '<nop>') -- Disable <Esc> on insert mode
+keymap('n', '<cr>', '<nop>') -- Disable <enter> on normal mode
 
 -- Edit neovim configuration in a vertical split
 keymap('n', '<leader>ev', ':vsplit $MYVIMRC<cr>')
@@ -56,5 +56,5 @@ keymap('n', 'N', 'Nzzzv')
 -- LSP diagnostics toggle bindings
 keymap('n', '<leader>dg', '<cmd> ToggleDiag <cr>')
 
-keymap('n', '<leader>csh', '<cr> :noh')
+keymap('n', '<leader>csh', ':noh<cr>')
 
