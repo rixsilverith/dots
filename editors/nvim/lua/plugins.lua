@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
     "git",
@@ -13,7 +14,6 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
     'nvim-lua/plenary.nvim',
-    "lewis6991/impatient.nvim",
     "tpope/vim-fugitive",
     "editorconfig/editorconfig-vim",
     {
@@ -67,6 +67,7 @@ local plugins = {
     },
     {
         'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons',
+        event = { 'BufReadPost', 'BufNewFile' },
         config = function() require('bufferline').setup({}) end
     },
     {
@@ -77,6 +78,13 @@ local plugins = {
                 options = {
                     component_separators = '',
                     section_separators = ''
+                },
+                sections = {
+                    lualine_x = {
+                        'encoding',
+                        { 'fileformat', symbols = { unix = 'unix' } },
+                        { 'filetype', colored = false }
+                    }
                 }
             }
             require('lualine').setup(opts)
@@ -128,7 +136,8 @@ local plugins = {
         end
     },
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.2',
+        'nvim-telescope/telescope.nvim', tag = '0.1.2', lazy = true,
+        cmd = "Telescope",
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = function()
             local options = {
@@ -422,6 +431,7 @@ local plugins = {
     },
     {
         'mfussenegger/nvim-dap',
+        event = "VeryLazy",
         config = function(_, opts)
             vim.keymap.set('n', '<leader>db', '<cmd> DapToggleBreakpoint <cr>')
         end
@@ -429,6 +439,7 @@ local plugins = {
     {
         'mfussenegger/nvim-dap-python',
         ft = 'python',
+        event = 'VeryLazy',
         dependencies = {
             'mfussenegger/nvim-dap',
             'rcarriga/nvim-dap-ui'
@@ -449,7 +460,7 @@ local plugins = {
             vim.g.vimtex_compiler_progname = 'nvr'
         end
     },
-    { 'rose-pine/neovim', name = 'rose-pine', config = function() vim.cmd('colorschem rose-pine') end },
+    { 'rose-pine/neovim', name = 'rose-pine', config = function() vim.cmd('colorscheme rose-pine') end },
     { 'embark-theme/vim', name = 'embark' },
     { 'rainglow/vim' }
 }
