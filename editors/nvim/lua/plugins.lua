@@ -26,8 +26,7 @@ local disabled_runtime_plugins = {
     "spellfile_plugin",
     "vimball",
     "vimballPlugin",
-    "zip",
-    "zipPlugin",
+    "zip", "zipPlugin",
     "tutor",
     "rplugin",
     "syntax",
@@ -426,12 +425,26 @@ local plugins = {
                 preselect = 'item',
                 completion = { completeopt = 'menu,menuone,noinsert' },
                 experimental = { ghost_text = true },
+                formatting = {
+                    format = function(entry, vim_item)
+                        vim_item.menu = ({
+                            nvim_lsp = '[LSP]',
+                            nvim_lua = '[LSP]',
+                            luasnip = '[Snippet]',
+                            buffer = '[Buffer]',
+                            path = '[Path]',
+                            ['vim-dadbod-completion'] = '[DB]',
+                        })[entry.source.name]
+                        return vim_item
+                    end,
+                },
                 sources = {
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
                     { name = "buffer" },
                     { name = "nvim_lua" },
-                    { name = "path" }
+                    { name = "path" },
+                    { name = 'vim-dadbod-completion' }
                 },
                 snippet = {
                     expand = function(args) require('luasnip').lsp_expand(args.body) end
@@ -472,7 +485,7 @@ local plugins = {
         'mfussenegger/nvim-dap',
         event = "VeryLazy",
         config = function(_, opts)
-            vim.keymap.set('n', '<leader>db', ':DapToggleBreakpoint <cr>')
+            vim.keymap.set('n', '<leader>dbp', ':DapToggleBreakpoint<cr>', { silent = true })
         end
     },
     {
@@ -487,6 +500,14 @@ local plugins = {
             require('dap-python').setup(path)
             vim.keymap.set('n', '<leader>dpr', function() require('dap-python').test_method() end)
         end
+    },
+    {
+        'kristijanhusak/vim-dadbod-ui',
+        dependencies = {
+            'tpope/vim-dadbod',
+            'kristijanhusak/vim-dadbod-completion'
+        },
+        keys = { { '<leader>dbA', ':DBUIToggle<cr>', mode = 'n', silent = true } }
     },
     {
         "lervag/vimtex",
