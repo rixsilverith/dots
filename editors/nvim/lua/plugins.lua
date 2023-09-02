@@ -1,56 +1,111 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+    vim.api.nvim_echo({ { "Cloning and installing lazy.nvim", "Bold" } }, true, {})
+
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end
 vim.opt.rtp:prepend(lazypath)
 
+local disabled_runtime_plugins = {
+    "2html_plugin",
+    "tohtml",
+    "getscript",
+    "getscriptPlugin",
+    "gzip",
+    "logipat",
+    "netrw",
+    "netrwPlugin",
+    "netrwSettings",
+    "netrwFileHandlers",
+    "matchit",
+    "tar",
+    "tarPlugin",
+    "rrhelper",
+    "spellfile_plugin",
+    "vimball",
+    "vimballPlugin",
+    "zip",
+    "zipPlugin",
+    "tutor",
+    "rplugin",
+    "syntax",
+    "synmenu",
+    "optwin",
+    "compiler",
+    "bugreport",
+    "ftplugin",
+}
+
+local lazy_opts = {
+    defaults = { lazy = true },
+    performance = {
+        rtp = { disabled_plugins = disabled_runtime_plugins, },
+    },
+}
+
 local plugins = {
     'nvim-lua/plenary.nvim',
-    "tpope/vim-fugitive",
-    "editorconfig/editorconfig-vim",
+    { 'tpope/vim-fugitive', cmd = "Git" },
+    { 'editorconfig/editorconfig-vim', event = "VeryLazy" },
     {
-        'kylechui/nvim-surround', version = '*', event = 'VeryLazy',
-        config = function() require('nvim-surround').setup({}) end
+        'norcalli/nvim-colorizer.lua', event = "VeryLazy",
+        config = function() require('colorizer').setup() end
     },
-    'nvim-treesitter/nvim-treesitter-textobjects',
+    {
+        'stevearc/aerial.nvim', opts = {},
+        keys = { { '<leader>ae', ':AerialToggle!<cr>', mode = 'n', silent = true } },
+        config = function()
+            require('aerial').setup({
+                on_attach = function(bufnr)
+                    vim.keymap.set('n', '<leader>{', ':AerialPrev<cr>', { buffer = bufnr, silent = true })
+                    vim.keymap.set('n', '<leader>}', ':AerialNext<cr>', { buffer = bufnr, silent = true })
+                end
+            })
+        end
+    },
+    { 'f-person/git-blame.nvim', event = "VeryLazy", },
+    { 'tzachar/highlight-undo.nvim', opts = {}, event = "VeryLazy" },
+    {
+        'kylechui/nvim-surround', version = '*', event = 'InsertEnter', opts = {},
+        dependencies = 'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     {
         'numToStr/Comment.nvim', opts = {},
+        dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+        keys = {
+            { "gcc", mode = "n", desc = "Comment toggle current line" },
+            { "gc", mode = { "n", "o" }, desc = "Comment toggle linewise" },
+            { "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
+            { "gbc", mode = "n", desc = "Comment toggle current block" },
+            { "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
+            { "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
+        },
     },
-    'JoosepAlviste/nvim-ts-context-commentstring',
     {
-        'stefanlogue/hydrate.nvim',
+        'stefanlogue/hydrate.nvim', event = "VeryLazy",
         opts = { minute_interval = 30 }
     },
-    { "lukas-reineke/indent-blankline.nvim",
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        enabled = false,
         event = "VeryLazy",
-        opts = function()
-            local opts = {
-                indentLine_enabled = 1,
-                filetype_exclude = {
-                    "help", "terminal", "lazy", "lspinfo", "TelescopePrompt", "TelescopeResults", "mason"
-                },
-                buftype_exclude = { "terminal" },
-                show_trailing_blankline_indent = false,
-                show_first_indent_level = false,
-                show_current_context = true,
-                show_current_context_start = true
-            }
-            return opts
-        end,
-        config = function(_, opts)
-            require('indent_blankline').setup(opts)
-        end
+        opts = {
+            indent_blankline_enabled = false,
+            filetype_exclude = {
+                "help", "terminal", "lazy", "lspinfo", "TelescopePrompt", "TelescopeResults", "mason"
+            },
+            buftype_exclude = { "terminal" },
+            show_trailing_blankline_indent = true,
+            show_first_indent_level = false,
+            show_current_context = false,
+            show_current_context_start = false
+        },
     },
     {
         "andweeb/presence.nvim",
+        enable = false,
         config = function()
             require('presence').setup({ neovim_image_text = "Neovim" })
         end
@@ -61,68 +116,54 @@ local plugins = {
     },
     {
         "mbbill/undotree",
-        config = function()
-            vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
-        end
+        keys = { { "<leader>U", ":UndotreeToggle<cr>", mode = "n", noremap = true, silent = true } }
     },
     {
         'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons',
-        event = { 'BufReadPost', 'BufNewFile' },
-        config = function() require('bufferline').setup({}) end
+        event = { 'BufReadPost', 'BufNewFile' }, opts = {}
     },
     {
         'nvim-lualine/lualine.nvim',
+        event = { 'BufReadPost', 'BufNewFile' },
         dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config = function()
-            local opts = {
-                options = {
-                    component_separators = '',
-                    section_separators = ''
-                },
-                sections = {
-                    lualine_x = {
-                        'encoding',
-                        { 'fileformat', symbols = { unix = 'unix' } },
-                        { 'filetype', colored = false }
-                    }
+        opts = {
+            options = {
+                component_separators = '',
+                section_separators = ''
+            },
+            sections = {
+                lualine_x = {
+                    'encoding',
+                    { 'fileformat', symbols = { unix = 'unix' } },
+                    { 'filetype', colored = false }
                 }
             }
-            require('lualine').setup(opts)
-        end
+        },
     },
     {
         'stevearc/oil.nvim', opts = {}, dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            vim.keymap.set('n', '-', '<cmd>Oil<cr>', { desc = 'Open parent directory' })
-
-            require('oil').setup({
-                columns = { 'permissions', 'size', 'mtime' }
-            })
-        end
+        keys = { { "<leader>-", ":Oil<cr>", mode = "n", noremap = true, silent = true } },
+        opts = {
+            columns = { 'permissions', 'size', 'mtime' } ,
+            skip_confirm_for_simple_edits = true,
+        }
     },
     {
-        'lewis6991/gitsigns.nvim',
-        opts = function()
-            local opts = {
-                signs = {
-                    add = { text = "│" },
-                    change = { text = "│" },
-                    delete = { text = "󰍵" },
-                    topdelete = { text = "‾" },
-                    changedelete = { text = "~" },
-                    untracked = { text = "│" },
-                },
-            }
-            return opts
-        end,
-        config = function(_, opts)
-            require('gitsigns').setup(opts)
-        end
+        'lewis6991/gitsigns.nvim', event = "BufReadPre",
+        opts = {
+            signs = {
+                add = { text = "│" },
+                change = { text = "│" },
+                delete = { text = "󰍵" },
+                topdelete = { text = "‾" },
+                changedelete = { text = "~" },
+                untracked = { text = "│" },
+            },
+        },
     },
     {
-        "jose-elias-alvarez/null-ls.nvim",
-        event = "VeryLazy",
-        ft = {"python", "sh"},
+        "jose-elias-alvarez/null-ls.nvim", ft = { "python", "sh" },
+        dependencies = { "mason.nvim" },
         opts = function()
             local null_ls = require('null-ls')
             local opts = {
@@ -136,7 +177,7 @@ local plugins = {
         end
     },
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.2', lazy = true,
+        'nvim-telescope/telescope.nvim', tag = '0.1.2',
         cmd = "Telescope",
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = function()
@@ -196,12 +237,12 @@ local plugins = {
     },
     {
         'theprimeagen/harpoon',
+        keys = {
+            { '<leader>a', mode = 'n', function() require('harpoon.mark').add_file() end },
+            { '<C-e>',     mode = 'n', function() require('harpoon.ui').toggle_quick_menu() end },
+        },
         config = function()
-            local mark = require('harpoon.mark')
             local ui = require('harpoon.ui')
-
-            vim.keymap.set('n', '<leader>a', mark.add_file)
-            vim.keymap.set('n', '<C-e>', ui.toggle_quick_menu)
 
             vim.keymap.set('n', '<C-t>', function() ui.nav_file(1) end)
             vim.keymap.set('n', '<C-y>', function() ui.nav_file(2) end)
@@ -209,10 +250,11 @@ local plugins = {
     },
     {
         "nvim-treesitter/nvim-treesitter",
+        event = { 'BufReadPre', "BufNewFile" },
+        cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
         build = ":TSUpdate",
         config = function ()
             local configs = require("nvim-treesitter.configs")
-
             configs.setup({
                 ensure_installed = { "c", "cpp", "python", "bash", "rust", "elixir", "latex" },
                 sync_install = false,
@@ -224,6 +266,7 @@ local plugins = {
     },
     {
         "nvim-treesitter/nvim-treesitter-context",
+        event = { 'BufReadPre', "BufNewFile" },
         config = function()
             require'treesitter-context'.setup{
                 enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -340,6 +383,7 @@ local plugins = {
     },
     {
         'VonHeikemen/lsp-zero.nvim',
+        event = { "BufReadPre", "BufNewFile" },
         branch = 'v2.x',
         dependencies = {
             -- LSP Support
@@ -390,9 +434,7 @@ local plugins = {
                     { name = "path" }
                 },
                 snippet = {
-                    expand = function(args)
-                        require('luasnip').lsp_expand(args.body)
-                    end
+                    expand = function(args) require('luasnip').lsp_expand(args.body) end
                 }
             })
             cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
@@ -400,6 +442,7 @@ local plugins = {
     },
     {
         'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim',
+        cmd = "ToggleDiag",
         config = function()
             require('toggle_lsp_diagnostics').init({ start_on = true })
         end
@@ -407,14 +450,10 @@ local plugins = {
     {
         "folke/trouble.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end)
-            vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end)
-            vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end)
-            vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end)
-            vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end)
-            vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end)
-        end
+        keys = {
+            { '<leader>xw', ':TroubleToggle workspace_diagnostics<cr>', mode = 'n', silent = true },
+            { '<leader>xd', ':TroubleToggle document_diagnostics<cr>', mode = 'n', silent = true },
+        },
     },
     {
         'rcarriga/nvim-dap-ui',
@@ -433,13 +472,12 @@ local plugins = {
         'mfussenegger/nvim-dap',
         event = "VeryLazy",
         config = function(_, opts)
-            vim.keymap.set('n', '<leader>db', '<cmd> DapToggleBreakpoint <cr>')
+            vim.keymap.set('n', '<leader>db', ':DapToggleBreakpoint <cr>')
         end
     },
     {
         'mfussenegger/nvim-dap-python',
         ft = 'python',
-        event = 'VeryLazy',
         dependencies = {
             'mfussenegger/nvim-dap',
             'rcarriga/nvim-dap-ui'
@@ -460,10 +498,15 @@ local plugins = {
             vim.g.vimtex_compiler_progname = 'nvr'
         end
     },
-    { 'rose-pine/neovim', name = 'rose-pine', config = function() vim.cmd('colorscheme rose-pine') end },
+    {
+        'rose-pine/neovim', name = 'rose-pine',
+        config = function() vim.cmd('colorscheme rose-pine') end,
+        lazy = false,
+        priority = 1000
+    },
     { 'embark-theme/vim', name = 'embark' },
     { 'rainglow/vim' }
 }
 
-require("lazy").setup(plugins)
+require("lazy").setup(plugins, lazy_opts)
 
