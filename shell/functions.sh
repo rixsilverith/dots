@@ -130,3 +130,17 @@ bookmark-multiplexer() {
   [[ -d "$resolved_dir" ]] && cd "$resolved_dir" || echo "! $selected_entry directory does not exist or is invalid"
 }
 
+# remove dead entries from directory bookmark index
+bookmark-dirindex-clean() {
+  DIRS_INDEX="$DOTS_HOME/misc/dirs.index"
+  [[ ! -f $DIRS_INDEX ]] && return 1
+
+  entries=($(cat "$DIRS_INDEX"))
+  for entry in "${entries[@]}"; do
+    if [[ ! -d "$HOME/$entry" ]]; then
+      echo "-- removing dead entry from directory bookmark index: $entry"
+      sed "$(grep -n -E "^${entry}$" $DIRS_INDEX | awk -F: '{print $1}')d" -i $DIRS_INDEX
+    fi
+  done
+}
+
