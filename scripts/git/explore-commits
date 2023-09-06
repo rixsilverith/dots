@@ -1,0 +1,105 @@
+#!/usr/bin/bash
+
+##? Interactively explore Git repository commit history
+
+GIT_FZF_OPTS="--ansi --reverse --bind=ctrl-q:abort,alt-j:preview-down,alt-k:preview-up"
+
+git::is_in_repo() {
+	git rev-parse HEAD >/dev/null 2>&1
+}
+
+git-commit-summary() {
+    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{7\}")
+    commit_info=$(git show --no-patch --pretty="%H;%aN;%aE;%ad;%cn;%cE;%cd;%s;%N;%d" $commit_hash)
+
+    commit_full_hash=$(echo "$commit_info" | cut -d";" -f1)
+    commit_author=$(echo "$commit_info" | cut -d";" -f2)
+    commit_author_email=$(echo "$commit_info" | cut -d";" -f3)
+    commit_author_date=$(echo "$commit_info" | cut -d";" -f4)
+    commit_committer=$(echo "$commit_info" | cut -d";" -f5)
+    commit_committer_email=$(echo "$commit_info" | cut -d";" -f6)
+    commit_committer_date=$(echo "$commit_info" | cut -d";" -f7)
+    commit_message=$(echo "$commit_info" | cut -d";" -f8)
+    commit_notes=$(echo "$commit_info" | cut -d";" -f9)
+    commit_refnames=$(echo "$commit_info" | cut -d";" -f10)
+
+    echo -e "commit \033[1m$commit_full_hash\033[0m\n"
+    [[ -n "$commit_refnames" ]] && echo -e "$commit_refnames\n"
+    echo -e "authored \033[1m$commit_author\033[0m ($commit_author_email)"
+    echo "on $commit_author_date\n"
+    echo -e "committed \033[1m$commit_committer\033[0m ($commit_committer_email)"
+    echo "on $commit_committer_date\n"
+    echo -e "\t\033[1m$commit_message\033[0m\n"
+    [[ -n "$commit_notes" ]] && echo -e "$commit_notes"
+
+    git show --stat --format="" --color=always $commit_hash |
+        while read line; do
+            tput dim
+            echo " $line" | sed "s/\x1B\[m/\x1B\[2m/g"
+            tput sgr0
+        done | tac | sed "1 a \ " | tac
+}
+
+git-explore-commit-files() {
+    git_fzf_opts=$1; shift
+    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
+
+    ENTER_F="git show --color=always $commit_hash -- \{} | less --tabs=4 -Rc"
+
+    git show --pretty="" --name-only "$commit_hash" |
+        eval "fzf $git_fzf_opts \
+        --pointer '➜' --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
+        --bind=\"enter:execute:$ENTER_F\" \
+        --preview-window=right:70%:wrap \
+        --preview \"git show --color=always $commit_hash -- \{}\"" # see https://github.com/junegunn/fzf/issues/1846
+}
+
+git-explore-commits() {
+    echo "exploring repo commits"
+    cd "$(command git rev-parse --git-dir)/.."
+
+    ENTER_F="$(declare -f git-explore-commit-files); git-explore-commit-files \"$GIT_FZF_OPTS\" {}"
+    PREVIEW_F="$(declare -f git-commit-summary); git-commit-summary {}"
+
+    git log --graph --color=always --format="%C(bold)%h %C(reset) %s" |
+        fzf $GIT_FZF_OPTS --no-sort --cycle --tiebreak=index --pointer '➜' \
+        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
+        --preview-window=right:60%:border-sharp:wrap \
+        --preview "$PREVIEW_F" \
+        --bind "enter:execute:$ENTER_F" --exit-0
+}
+
+git-show-commit-file() {
+    file=$1; shift
+    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
+    git show --color=always $commit_hash -- "$file" | less --tabs=4 -Rc
+}
+
+git-explore-commits-from-file() {
+    cd "$(command git rev-parse --git-dir)/.."
+
+    file=$(git ls-files |
+        fzf --reverse --no-sort --cycle --tiebreak=index --pointer '➜' \
+        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
+        --exit-0)
+
+    ENTER_F="$(declare -f git-show-commit-file); git-show-commit-file \"$file\" {}"
+    PREVIEW_F="$(declare -f git-commit-summary); git-commit-summary {}"
+
+    git log --graph --color=always --format="%C(bold)%h %C(reset) %s" -- "$file" |
+        fzf $GIT_FZF_OPTS --no-sort --cycle --tiebreak=index --pointer '➜' \
+        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
+        --preview-window=right:60%:border-sharp:wrap \
+        --preview "$PREVIEW_F" \
+        --bind "enter:execute:$ENTER_F" --exit-0
+    exit 0
+}
+
+git-explore() {
+    [[ $# -eq 0 ]] && git-explore-commits
+    [[ "$1" == "files" ]] && git-explore-commits-from-file
+    exit 1
+}
+
+git-explore "$@"
+
