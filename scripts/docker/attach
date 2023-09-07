@@ -24,7 +24,7 @@ else
 fi
 
 set +e # failsafe
-container=$(echo "$containers" | awk '{print $2}' | fzf --height 50% --reverse)
+container=$(echo "$containers" | awk '{print $2}' | fzf --height 50%)
 [[ -z "$container" ]] && echo "No container selected" && exit 1
 
 container_id=$(echo "$container" | grep "$container" | awk '{print $1}')

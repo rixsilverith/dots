@@ -19,6 +19,10 @@ export TEXINPUTS=$HOME/Uni/latex-stuff:
 # Make Python use UTF-8 encoding for output to stdin, stdout and stderr
 export PYTHONIOENCONDING='UTF-8'
 
+export FZF_DEFAULT_OPTS="--reverse --cycle --no-sort --tiebreak=index \
+  --bind='alt-j:preview-down,alt-k:preview-up' --pointer '➜' \
+  --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1'"
+
 # ~/ Clean-up
 export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs, such as LightDM
 export XINITRC="$DOTS_HOME/wm/X11/xinitrc"

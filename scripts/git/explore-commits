@@ -2,8 +2,6 @@
 
 ##? Interactively explore Git repository commit history
 
-GIT_FZF_OPTS="--ansi --reverse --bind=ctrl-q:abort,alt-j:preview-down,alt-k:preview-up"
-
 git::is_in_repo() {
 	git rev-parse HEAD >/dev/null 2>&1
 }
@@ -45,35 +43,27 @@ git::explore-files-in-commit() {
     #? open a fzf instance containing the list of changed files in the given commit,
     #? previwing its diff
 
-    git_fzf_opts=$1; shift
     commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
 
     ENTER_F="git show --color=always $commit_hash -- \{} | less --tabs=4 -Rc"
 
-    git show --pretty="" --name-only "$commit_hash" |
-        eval "fzf $git_fzf_opts \
-        --pointer '➜' --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1' \
-        --bind=\"enter:execute:$ENTER_F\" \
+    git show --pretty="" --name-only "$commit_hash" | fzf --bind="enter:execute:$ENTER_F" \
         --preview-window=right:70%:wrap \
-        --preview \"git show --color=always $commit_hash -- \{}\"" # see https://github.com/junegunn/fzf/issues/1846
+        --preview "git show --color=always $commit_hash -- \{}" # see https://github.com/junegunn/fzf/issues/1846
 }
 
 git::commit-finder() {
     #? open a fzf instance containing the given list of commits.
     #? entering a commit lists the files changed, with their diff in preview
 
-    ENTER_F="$(declare -f git::explore-files-in-commit); git::explore-files-in-commit \"$GIT_FZF_OPTS\" {}"
+    ENTER_F="$(declare -f git::explore-files-in-commit); git::explore-files-in-commit {}"
     PREVIEW_F="$(declare -f git::commit-summary); git::commit-summary {}"
 
     commit_list="$1"
     [[ $# -gt 1 ]] && ENTER_F="$2"
 
-    echo -e "$commit_list" |
-        fzf $GIT_FZF_OPTS --no-sort --cycle --tiebreak=index --pointer '➜' \
-        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
-        --preview-window=right:60%:border-sharp:wrap \
-        --preview "$PREVIEW_F" \
-        --bind "enter:execute:$ENTER_F" --exit-0
+    echo -e "$commit_list" | fzf --ansi --bind "enter:execute:$ENTER_F" --exit-0 \
+        --preview-window=right:60%:border-sharp:wrap --preview "$PREVIEW_F"
 }
 
 git::explore-commits() {
@@ -99,12 +89,7 @@ _git::less-commit-file-diff() {
 git::explore-commits::from-file() {
     # run `git ls-files` from the git repository root
     cd "$(command git rev-parse --git-dir)/.."
-
-    file=$(git ls-files |
-        fzf --reverse --no-sort --cycle --tiebreak=index --pointer '➜' \
-        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
-        --exit-0)
-
+    file=$(git ls-files | fzf --exit-0)
     [[ -z "$file" ]] && exit 0
 
     ENTER_F="$(declare -f _git::less-commit-file-diff); _git::less-commit-file-diff \"$file\" {}"

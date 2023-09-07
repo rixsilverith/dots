@@ -101,11 +101,7 @@ bookmark-multiplexer() {
     [[ -n "$dirs_index_entries" ]] && entries="$entries$dirs_index_entries"
   fi
 
-  local selected_entry=$(echo -e "$entries" | fzf \
-    --layout reverse-list --height 100% --cycle \
-    --pointer '➜' \
-    --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,bg+:-1')
-
+  local selected_entry=$(echo -e "$entries" | fzf)
   [[ -z "$selected_entry" ]] && return 0
 
   # tmux session selected
