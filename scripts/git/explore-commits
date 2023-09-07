@@ -97,6 +97,10 @@ git::explore-commits::from-file() {
     git::commit-finder "$commit_list" "$ENTER_F"
 }
 
+if ! git::is_in_repo; then
+    echo "fatal: not a git repository (or any of the parent directories): .git" && exit 1
+fi
+
 [[ $# -eq 0 ]] && git::explore-commits
 [[ "$1" == "files" ]] && git::explore-commits::from-file
 
