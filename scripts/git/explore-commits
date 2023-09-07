@@ -8,7 +8,7 @@ git::is_in_repo() {
 	git rev-parse HEAD >/dev/null 2>&1
 }
 
-git-commit-summary() {
+git::commit-summary() {
     commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{7\}")
     commit_info=$(git show --no-patch --pretty="%H;%aN;%aE;%ad;%cn;%cE;%cd;%s;%N;%d" $commit_hash)
 
@@ -32,6 +32,7 @@ git-commit-summary() {
     echo -e "\t\033[1m$commit_message\033[0m\n"
     [[ -n "$commit_notes" ]] && echo -e "$commit_notes"
 
+    # see https://gist.github.com/junegunn/f4fca918e937e6bf5bad?permalink_comment_id=4075799#gistcomment-4075799
     git show --stat --format="" --color=always $commit_hash |
         while read line; do
             tput dim
@@ -40,7 +41,10 @@ git-commit-summary() {
         done | tac | sed "1 a \ " | tac
 }
 
-git-explore-commit-files() {
+git::explore-files-in-commit() {
+    #? open a fzf instance containing the list of changed files in the given commit,
+    #? previwing its diff
+
     git_fzf_opts=$1; shift
     commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
 
@@ -54,14 +58,17 @@ git-explore-commit-files() {
         --preview \"git show --color=always $commit_hash -- \{}\"" # see https://github.com/junegunn/fzf/issues/1846
 }
 
-git-explore-commits() {
-    echo "exploring repo commits"
-    cd "$(command git rev-parse --git-dir)/.."
+git::commit-finder() {
+    #? open a fzf instance containing the given list of commits.
+    #? entering a commit lists the files changed, with their diff in preview
 
-    ENTER_F="$(declare -f git-explore-commit-files); git-explore-commit-files \"$GIT_FZF_OPTS\" {}"
-    PREVIEW_F="$(declare -f git-commit-summary); git-commit-summary {}"
+    ENTER_F="$(declare -f git::explore-files-in-commit); git::explore-files-in-commit \"$GIT_FZF_OPTS\" {}"
+    PREVIEW_F="$(declare -f git::commit-summary); git::commit-summary {}"
 
-    git log --graph --color=always --format="%C(bold)%h %C(reset) %s" |
+    commit_list="$1"
+    [[ $# -gt 1 ]] && ENTER_F="$2"
+
+    echo -e "$commit_list" |
         fzf $GIT_FZF_OPTS --no-sort --cycle --tiebreak=index --pointer '➜' \
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
         --preview-window=right:60%:border-sharp:wrap \
@@ -69,13 +76,28 @@ git-explore-commits() {
         --bind "enter:execute:$ENTER_F" --exit-0
 }
 
-git-show-commit-file() {
+git::explore-commits() {
+    #? list all commits in the git repository history.
+    #? entering a commit lists the files changed there, with the
+    #?      preview window showing the diff for that file
+
+    commits=$(git log --graph --color=always --format="%C(bold)%h  %C(reset)%s")
+    git::commit-finder "$commits"
+}
+
+_git::less-commit-file-diff() {
+    #? show diff in less for the given file and commit
+    #?
+    #? _git::less-commit-file-diff is intented to be used internally by
+    #? git::explore-commits::from-file
+
     file=$1; shift
     commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
     git show --color=always $commit_hash -- "$file" | less --tabs=4 -Rc
 }
 
-git-explore-commits-from-file() {
+git::explore-commits::from-file() {
+    # run `git ls-files` from the git repository root
     cd "$(command git rev-parse --git-dir)/.."
 
     file=$(git ls-files |
@@ -83,23 +105,15 @@ git-explore-commits-from-file() {
         --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
         --exit-0)
 
-    ENTER_F="$(declare -f git-show-commit-file); git-show-commit-file \"$file\" {}"
-    PREVIEW_F="$(declare -f git-commit-summary); git-commit-summary {}"
+    [[ -z "$file" ]] && exit 0
 
-    git log --graph --color=always --format="%C(bold)%h %C(reset) %s" -- "$file" |
-        fzf $GIT_FZF_OPTS --no-sort --cycle --tiebreak=index --pointer '➜' \
-        --color 'hl:255,hl+:255,pointer:255:bold,marker:255,info:248,prompt:255,fg:250,bg+:-1' \
-        --preview-window=right:60%:border-sharp:wrap \
-        --preview "$PREVIEW_F" \
-        --bind "enter:execute:$ENTER_F" --exit-0
-    exit 0
+    ENTER_F="$(declare -f _git::less-commit-file-diff); _git::less-commit-file-diff \"$file\" {}"
+    commit_list=$(git log --graph --color=always --format="%C(bold)%h  %C(reset)%s" -- "$file")
+    git::commit-finder "$commit_list" "$ENTER_F"
 }
 
-git-explore() {
-    [[ $# -eq 0 ]] && git-explore-commits
-    [[ "$1" == "files" ]] && git-explore-commits-from-file
-    exit 1
-}
+[[ $# -eq 0 ]] && git::explore-commits
+[[ "$1" == "files" ]] && git::explore-commits::from-file
 
-git-explore "$@"
+exit 0
 
