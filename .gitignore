@@ -4,7 +4,6 @@
 bin/compiled/
 misc/walls/.wall.jpg
 util/redshift/.night-shift-enabled
-editors/nvim/lazy-lock.json
 
 # compiled zsh things
 shell/**/**.zwc
@@ -17,3 +16,4 @@ ssh/**
 !ssh/config
 !ssh/.hidden_hosts.encrypted
 
+editors/nvim_legacy/
