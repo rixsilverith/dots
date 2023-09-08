@@ -97,7 +97,7 @@ bookmark-multiplexer() {
   fi
 
   if [[ -f "$DIRS_INDEX" ]]; then
-    dirs_index_entries=$(cat "$DIRS_INDEX")
+    dirs_index_entries=$(cat "$DIRS_INDEX" | sort)
     [[ -n "$dirs_index_entries" ]] && entries="$entries$dirs_index_entries"
   fi
 
