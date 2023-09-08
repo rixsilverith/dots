@@ -1,0 +1,10 @@
+# vim: set ft=sshconfig:
+
+Include hidden_hosts
+
+Host *
+    Compression yes
+    TCPKeepAlive yes
+    ServerAliveInterval 15
+    ServerAliveCountMax 10
+

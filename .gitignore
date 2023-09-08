@@ -12,3 +12,8 @@ shell/**/**.zwc.old
 shell/**/**.zcompdump
 shell/**/.zcompcache
 
+# track specific SSH config files, ignore the rest
+ssh/**
+!ssh/config
+!ssh/.hidden_hosts.encrypted
+
