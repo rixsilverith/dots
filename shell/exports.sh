@@ -12,6 +12,8 @@ export BROWSER='firefox'
 export LANG='en_GB.UTF-8'
 export LC_ALL='en_GB.UTF-8'
 
+export SUDO_PROMPT="🔑authenticate (%U): "
+
 # Tell the LaTeX compiler to look for classes and packages in the
 # following directories
 export TEXINPUTS=$HOME/Uni/latex-stuff:
