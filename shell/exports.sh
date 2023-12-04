@@ -1,6 +1,8 @@
 # This file defines the environment variables to be exported and shared
 # between both zsh and bash
 
+[[ -f "$DOTS_HOME/secrets.env" ]] && source "$DOTS_HOME/secrets.env"
+
 # Make NeoVim the default text editor
 export EDITOR='nvim'
 # Make Alacritty the default terminal emulator

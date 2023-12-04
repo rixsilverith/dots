@@ -1,5 +1,7 @@
 *.no-commit.*
 
+secrets.env
+
 /**/__pycache__/
 bin/compiled/
 misc/walls/.wall.jpg
