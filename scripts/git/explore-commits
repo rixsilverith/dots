@@ -43,7 +43,8 @@ git::explore-files-in-commit() {
     #? open a fzf instance containing the list of changed files in the given commit,
     #? previwing its diff
 
-    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
+    cd "$(command git rev-parse --git-dir)/.."
+    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{7\}")
 
     ENTER_F="git show --color=always $commit_hash -- \{} | less --tabs=4 -Rc"
 
@@ -82,7 +83,7 @@ _git::less-commit-file-diff() {
     #? git::explore-commits::from-file
 
     file=$1; shift
-    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{8\}")
+    commit_hash=$(echo -- "$@" | grep -o "[a-f0-9]\{7\}")
     git show --color=always $commit_hash -- "$file" | less --tabs=4 -Rc
 }
 
@@ -98,7 +99,7 @@ git::explore-commits::from-file() {
 }
 
 if ! git::is_in_repo; then
-    echo "fatal: not a git repository (or any of the parent directories): .git" && exit 1
+    echo "explore-commits: fatal: not a git repository (or any of the parent directories): .git" && exit 1
 fi
 
 [[ $# -eq 0 ]] && git::explore-commits
