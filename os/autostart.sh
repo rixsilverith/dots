@@ -1,16 +1,7 @@
-#!/usr/bin/bash
+#!/bin/bash
 
-# Set keymap to Spanish layout
 setxkbmap es
-
-# Restore wallpaper
-feh --bg-scale --no-fehbg $DOTS_HOME/misc/walls/.wall.jpg
-
-# Restore cursor theme
+feh --bg-scale --no-fehbg "$DOTS_HOME/misc/walls/.wall.jpg"
 xsetroot -cursor_name left_ptr
-
-# Automounter
 udiskie &
-
-# Compositor
-picom -f --config $DOTS_HOME/wm/picom/picom.conf &
+picom -f --config "$DOTS_HOME/os/picom/picom.conf" &
