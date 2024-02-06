@@ -1,0 +1,49 @@
+live_config_reload = true
+
+[bell]
+animation = "EaseOutExpo"
+color = "#ffffff"
+duration = 0
+
+[colors.primary]
+background = "#000000"
+foreground = "#c5c8c6"
+
+[cursor]
+style = "Block"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 9.0
+
+[font.bold]
+family = "SF Mono"
+style = "Heavy"
+
+[font.bold_italic]
+family = "SF Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "SF Mono"
+style = "Italic"
+
+[font.normal]
+family = "SF Mono"
+style = "Bold"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Alt"
+
+[window.padding]
+x = 15
+y = 10
