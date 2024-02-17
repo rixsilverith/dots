@@ -1,28 +1,21 @@
-#! /bin/sh
+#!/bin/sh
 
-# Truncate a couple of common commands used here
+# truncate a couple of common commands used here
 _bc() { bspc config "$@"; }
 _br() { bspc rule "$@"; }
 
-# Load keybinds using Sxhkd
-pgrep -x sxhkd > /dev/null || sxhkd -c $DOTS_HOME/wm/bspwm/keybinds &
-# Run Polybar
-$DOTS_HOME/wm/polybar/launch.sh &
+pgrep -x sxhkd > /dev/null || sxhkd -c "$DOTS_HOME/os/bspwm/keybinds" &
+"$DOTS_HOME/os/polybar/launch.sh" &
 
-# Define workspaces
 bspc monitor -d I II III IV V VI VII VIII
 
-# bspwm's graphical appearance
 _bc border_width         0
 _bc window_gap          12
 
-# bspwm's tiling rules
 _bc split_ratio          0.52
 _bc borderless_monocle   true
 _bc gapless_monocle      true
 
-# Application-specific rules
 _br -a Zathura state=tiled
 _br -a firefox desktop='^2' followon=on
 _br -a discord desktop='^3' followon=on
-
