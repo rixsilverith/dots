@@ -1,9 +1,0 @@
-#!/usr/bin/bash
-set -euo pipefail
-
-source "$DOTS_HOME/scripts/core/dot.sh"
-
-##? Compress a file in the given format
-##?
-##? Usage: dot (filesystem | fs) compress <format> <file>
-docs::parse "$@"
