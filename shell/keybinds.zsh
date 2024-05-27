@@ -6,6 +6,9 @@ bindkey '^H' backward-kill-word
 bindkey '^L' clear-screen
 bindkey '^D' backward-kill-line
 
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
 # use `ctrl + j` to jump to a bookmarked directory
 jump-directory() {
   local dir=$(cat $DOTS_HOME/misc/dirs.index | fzf \
