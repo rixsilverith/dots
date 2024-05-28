@@ -34,6 +34,11 @@ mkmv() {
   [[ -d "$dir" ]] || mkdir -p "$dir" && mv "$@"
 }
 
+keygen() {
+  local len=${1:-64}
+  pwgen -sy -1 $len
+}
+
 # cd to a directory using Z (see https://github.com/rupa/z)
 # usage: d [directory]
 d() { _z "${1:-$HOME}"; }
@@ -139,4 +144,3 @@ bookmark-dirindex-clean() {
     fi
   done
 }
-

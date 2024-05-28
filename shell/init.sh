@@ -4,3 +4,5 @@
 source "$DOTS_HOME/shell/exports.sh"
 source "$DOTS_HOME/shell/functions.sh"
 source "$DOTS_HOME/shell/aliases.sh"
+
+[[ -f "$DOTS_HOME/shell/extra.hidden.sh" ]] && source "$DOTS_HOME/shell/extra.hidden.sh"
