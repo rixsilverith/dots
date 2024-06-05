@@ -1,4 +1,4 @@
-export DOTS_HOME=$HOME/Code/dots
+export DOTS_HOME=$HOME/self/code/dots
 export ZIM_HOME=$DOTS_HOME/modules/zimfw
 
 export XDG_DATA_HOME="$HOME/.local/share"
