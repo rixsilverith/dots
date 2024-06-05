@@ -32,3 +32,14 @@
     added = yellow
     changed = green
     untracked = cyan
+
+[alias]
+    branches = branch -avv
+    nuke = !git clean -df && git reset --hard
+    idiff = diff --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+    sdiff = !git diff --staged
+    diff-upstream-master = !git fetch origin && git diff master origin/master
+    diff-upstream = !git fetch origin && git diff main origin/main
+    diff-head = !git diff-index --quiet HEAD -- || clear && git diff --patch-with-stat
+    # remove tracked files from version control listed in .gitignore
+    apply-gitignore = !git ls-files --ignored --others --exclude-standard | xargs git rm --cached
